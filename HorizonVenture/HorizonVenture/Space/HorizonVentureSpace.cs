@@ -16,10 +16,22 @@ namespace HorizonVenture.HorizonVenture.Space
         float _worldScale;
         HorizonVentureGame _game;
 
-        PlayerShip playerShip;
+        private PlayerShip _playerShip;
+        public PlayerShip PlayerShip 
+        {
+            get { return _playerShip; }
+            set 
+            {
+                if (!_entities.Contains(value) || !value.Equals(_playerShip))
+                {
+                    _playerShip = value;
+                    _entities.Add(value);
+                }
+            }
+        }
         List<AbstractSpaceEntity> _entities;
 
-        public HorizonVentureSpace(HorizonVentureGame game) 
+        public HorizonVentureSpace(HorizonVentureGame game, PlayerShip playerShip) 
         {
             _game = game;
 
@@ -28,7 +40,7 @@ namespace HorizonVenture.HorizonVenture.Space
 
             _entities = new List<AbstractSpaceEntity>();
 
-            playerShip = new PlayerShip(this, new Vector2(0, 0));
+        //    playerShip = new PlayerShip(this, new Vector2(0, 0));
             _entities.Add(playerShip);
             
         }
@@ -44,10 +56,12 @@ namespace HorizonVenture.HorizonVenture.Space
 
         public void Draw(SpriteBatch spriteBatch)
         {
-            _spacePositionOffset.X = -playerShip.SpacePosition.X + (_game.GetScreenSize().X / 2);
-            _spacePositionOffset.Y = -playerShip.SpacePosition.Y + (_game.GetScreenSize().Y / 2);
+            _spacePositionOffset.X = -PlayerShip.SpacePosition.X + (_game.GetScreenSize().X / 2);
+            _spacePositionOffset.Y = -PlayerShip.SpacePosition.Y + (_game.GetScreenSize().Y / 2);
 
-            foreach (AbstractSpaceEntity entity in this._entities)
+            removeNullEntities();
+
+            foreach (AbstractSpaceEntity entity in _entities)
             {
                 entity.Draw(spriteBatch, _spacePositionOffset, _worldScale);
             }
@@ -57,10 +71,18 @@ namespace HorizonVenture.HorizonVenture.Space
 
         public void Update(GameTime gameTime)
         {
-            foreach (AbstractSpaceEntity entity in this._entities)
+            removeNullEntities();
+
+            foreach (AbstractSpaceEntity entity in _entities)
             {
                 entity.Update(gameTime);
             }
+        }
+
+
+        private void removeNullEntities()
+        {
+            _entities.RemoveAll(item => item == null);
         }
 
     }

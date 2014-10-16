@@ -2,6 +2,7 @@
 using HorizonVenture.HorizonVenture.Space;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -22,7 +23,20 @@ namespace HorizonVenture.HorizonVenture.Screens
 
         protected override void Init()
         {
+            InputManager.AddKeyPressHandlers(Keys.S, sKeyPressed);
+        }
 
+
+        protected override void UnInit()
+        {
+            base.UnInit();
+
+            InputManager.RemoveKeyPressHandlers(Keys.S, sKeyPressed);
+
+        }
+        void sKeyPressed(object sender, InputManager.KeyPressArgs e)
+        {
+            _game.ShowShipEditScreen();
         }
 
         public override void Draw(SpriteBatch spriteBatch)

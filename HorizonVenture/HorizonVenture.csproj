@@ -44,6 +44,7 @@
     <Compile Include="HorizonVenture\Blocks\BlocksHolderPatterns\BlocksHolderPatternSupplier.cs" />
     <Compile Include="HorizonVenture\Controls\Button.cs" />
     <Compile Include="HorizonVenture\Controls\Control.cs" />
+    <Compile Include="HorizonVenture\Controls\Panel.cs" />
     <Compile Include="HorizonVenture\Draw\ISpaceDrawable.cs" />
     <Compile Include="HorizonVenture\EntityComponents\EngineComponents\AbstractEngine.cs" />
     <Compile Include="HorizonVenture\EntityComponents\EngineComponents\SimpleEngine.cs" />
@@ -51,6 +52,7 @@
     <Compile Include="HorizonVenture\Screens\InSpaceScreen.cs" />
     <Compile Include="HorizonVenture\Screens\MainMenuScreen.cs" />
     <Compile Include="HorizonVenture\EntityComponents\AbstractEntityComponent.cs" />
+    <Compile Include="HorizonVenture\Screens\ShipEditScreen.cs" />
     <Compile Include="HorizonVenture\Space\HorizonVentureSpace.cs" />
     <Compile Include="HorizonVenture\SpaceEntities\AbstractSpaceEntity.cs" />
     <Compile Include="HorizonVenture\SpaceEntities\Ships\AbstractShip.cs" />

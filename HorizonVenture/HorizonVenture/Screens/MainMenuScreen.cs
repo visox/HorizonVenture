@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Microsoft.Xna.Framework.Input;
 
 namespace HorizonVenture.HorizonVenture.Screens
 {
@@ -22,6 +23,8 @@ namespace HorizonVenture.HorizonVenture.Screens
 
         protected override void Init()
         {
+            
+
             if (_controls.Count != 0)
                 return;
 
@@ -48,7 +51,11 @@ namespace HorizonVenture.HorizonVenture.Screens
             endGame.Click += endGame_Click;
 
             _controls.Add(endGame);
+
+            
         }
+
+        
 
         void endGame_Click(object sender, Button.ButtonclickArgs e)
         {

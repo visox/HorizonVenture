@@ -32,6 +32,10 @@ namespace HorizonVenture.HorizonVenture.Screens
 
         protected abstract void Init();
 
+        protected virtual void UnInit()
+        { 
+        }
+
         public virtual void Update(GameTime gameTime)
         {
             foreach (Control c in _controls)

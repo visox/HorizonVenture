@@ -2,6 +2,7 @@
 using HorizonVenture.HorizonVenture.EntityComponents;
 using HorizonVenture.HorizonVenture.EntityComponents.EngineComponents;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,10 +15,10 @@ namespace HorizonVenture.HorizonVenture.Space.SpaceEntities.Ships
 
         public List<AbstractEntityComponent> OwnedComponents { get; private set; }
 
-        public PlayerShip(HorizonVentureSpace space, Vector2 spacePosition)
-            : base(space, spacePosition)
+        public PlayerShip(HorizonVentureSpace horizonVentureSpace, Vector2 spacePosition)
+            : base(horizonVentureSpace, spacePosition)
         {
-            _blocksHolder = BlocksHolderPatternSupplier.getExampleShipPatter(space.getGame());
+            _blocksHolder = BlocksHolderPatternSupplier.getExampleShipPatter(horizonVentureSpace.getGame());
 
             EntityComponents.Add(new SimpleEngine(this, new Vector2(20,20)));
         }
@@ -64,6 +65,14 @@ namespace HorizonVenture.HorizonVenture.Space.SpaceEntities.Ships
         {
             this.SpacePosition = new Vector2(this.SpacePosition.X + offset.X, this.SpacePosition.Y + offset.Y);
             //   this._world.offSetWorldPosition(offset.X, offset.Y);
+        }
+
+        public void DetailShipDraw(SpriteBatch spriteBatch, Vector2 screenCenter, float scale)
+        {
+            this._blocksHolder.Draw(spriteBatch, screenCenter,
+                this._blocksHolder.GetCenter(), 0, _color, scale);
+
+            DrawEntityComponents(spriteBatch, screenCenter, scale);
         }
 
     }

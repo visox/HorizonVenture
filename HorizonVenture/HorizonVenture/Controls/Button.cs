@@ -69,7 +69,6 @@ namespace HorizonVenture.HorizonVenture.Controls
 
         public class ButtonclickArgs : EventArgs
         {
-
             public ButtonclickArgs()
             {
             }

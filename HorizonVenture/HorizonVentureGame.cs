@@ -1,5 +1,6 @@
 ﻿using HorizonVenture.HorizonVenture.Screens;
 using HorizonVenture.HorizonVenture.Space;
+using HorizonVenture.HorizonVenture.Space.SpaceEntities.Ships;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
@@ -12,10 +13,11 @@ namespace HorizonVenture
         GraphicsDeviceManager _graphics;
         SpriteBatch _spriteBatch;
         Vector2 _baseScreenSize = new Vector2(1280, 680);
+        PlayerShip _playerShip;
 
         MainMenuScreen _mainMenuScreen;
         InSpaceScreen _inSpaceScreen;
-
+        ShipEditScreen _shipEditScreen;
 
         HorizonVentureSpace _horizonVentureSpace;
         
@@ -29,13 +31,11 @@ namespace HorizonVenture
                 PreferredDepthStencilFormat = DepthFormat.Depth24Stencil8
             };
 
-            Window.AllowUserResizing = false;
-            
+            Window.AllowUserResizing = false;           
 
-            Content.RootDirectory = "Content";
-
-   
+            Content.RootDirectory = "Content";   
         }
+
 
         protected override void Initialize()
         {
@@ -57,9 +57,7 @@ namespace HorizonVenture
 
             _inSpaceScreen = new InSpaceScreen(this);
 
-
-            _horizonVentureSpace = new HorizonVentureSpace(this);
-            _inSpaceScreen.HorizonVentureSpace = _horizonVentureSpace;
+            _shipEditScreen = new ShipEditScreen(this);       
 
         }
 
@@ -105,9 +103,19 @@ namespace HorizonVenture
                 GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height);*/
         }
 
+        public void ShowShipEditScreen()
+        {
+            _shipEditScreen.Show();
+            _shipEditScreen.PlayerShip = _playerShip;
+        }
+
 
         public void ShowInSpaceScreen()
-        {
+        {            
+            _horizonVentureSpace = new HorizonVentureSpace(this, _playerShip);
+            _playerShip = new PlayerShip(_horizonVentureSpace, new Vector2(0, 0));
+            _horizonVentureSpace.PlayerShip = _playerShip;
+            _inSpaceScreen.HorizonVentureSpace = _horizonVentureSpace;
             _inSpaceScreen.Show();
         }
 
