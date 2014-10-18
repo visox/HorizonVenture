@@ -14,12 +14,14 @@ namespace HorizonVenture.HorizonVenture.Screens
     {
         public PlayerShip PlayerShip { get; set; }
         public Vector2 ScreenCenter { get; set; }
+        public float Scale { get; set; }
 
         public ShipEditScreen(HorizonVentureGame game)
             : base(game)
         {
             _backgroundColor = Color.Black;
             ScreenCenter = new Vector2((game.GetScreenSize().X - PANEL_WIDTH )/ 2, game.GetScreenSize().Y / 2);
+            Scale = 1;
         }
 
         private static readonly int BUTTON_WIDTH = 300;
@@ -87,7 +89,7 @@ namespace HorizonVenture.HorizonVenture.Screens
         {
             if (PlayerShip != null)
             {
-                PlayerShip.DetailShipDraw(spriteBatch, ScreenCenter, 1);
+                PlayerShip.DetailShipDraw(spriteBatch, ScreenCenter, Scale);
             }
         }
 
@@ -98,12 +100,14 @@ namespace HorizonVenture.HorizonVenture.Screens
 
         void plusButton_Click(object sender, Button.ButtonclickArgs e)
         {
-           
+            if (Scale < 1)
+                Scale *= 2f;
         }
 
         void minusButton_Click(object sender, Button.ButtonclickArgs e)
         {
-
+            if (Scale > 1.0f/8.0f)
+                Scale /= 2f;
         }
     }
 }

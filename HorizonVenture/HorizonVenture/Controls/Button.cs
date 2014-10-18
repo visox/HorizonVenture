@@ -15,6 +15,8 @@ namespace HorizonVenture.HorizonVenture.Controls
 
         public Color DrawBackgroundColor { get; set; }
         public Color DrawFontColor { get; set; }
+        public float RefreshPressMilliseconds { get; set; }
+        private float _currentDelay;
 
         private Vector2 _textPos;
         private Vector2 _textCenter;
@@ -23,7 +25,7 @@ namespace HorizonVenture.HorizonVenture.Controls
 
         public event ButtonClickHandler Click;
 
-
+        private static readonly float DEFAULT_REFRESH_PRESS_TIME = 100;
 
         public Button(Texture2D background, string text, SpriteFont font, Rectangle position)
         {
@@ -35,6 +37,9 @@ namespace HorizonVenture.HorizonVenture.Controls
 
             DrawBackgroundColor = Color.White;
             DrawFontColor = Color.Black;
+
+            RefreshPressMilliseconds = DEFAULT_REFRESH_PRESS_TIME;
+            _currentDelay = 0;
 
             _textPos = new Vector2(Position.Center.ToVector2().X, Position.Center.ToVector2().Y);
             Vector2 size = _font.MeasureString(_text);
@@ -49,19 +54,38 @@ namespace HorizonVenture.HorizonVenture.Controls
                 _textCenter , 1, SpriteEffects.None, 0);
         }
 
-        public override void Update(Microsoft.Xna.Framework.GameTime gameTime)
+        public override void Update(GameTime gameTime)
         {
             HandleInput();
+
+            UpdateDelay(gameTime);
+        }
+
+        private void UpdateDelay(GameTime gameTime)
+        {
+            if (_currentDelay <= 0)
+            {
+                return;
+            }
+
+            _currentDelay -= gameTime.ElapsedGameTime.Milliseconds;
         }
 
         private void HandleInput()
         {
+            if (_currentDelay > 0)
+            {
+                return; 
+            }
             if(InputManager.MouseState.LeftButton == Microsoft.Xna.Framework.Input.ButtonState.Pressed)
             {
                 if(Position.Contains(InputManager.MouseState.Position))
                 {
-                    if(Click != null)
+                    if (Click != null)
+                    {
                         Click(this, new ButtonclickArgs());
+                        _currentDelay = RefreshPressMilliseconds;
+                    }
                 }
             }
         }
