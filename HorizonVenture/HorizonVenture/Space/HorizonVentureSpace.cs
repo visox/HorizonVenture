@@ -10,7 +10,7 @@ using System.Text;
 
 namespace HorizonVenture.HorizonVenture.Space
 {
-    class HorizonVentureSpace
+    public class HorizonVentureSpace
     {
         Vector2 _spacePositionOffset;
         float _worldScale;

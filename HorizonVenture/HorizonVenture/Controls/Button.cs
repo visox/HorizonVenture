@@ -9,17 +9,17 @@ namespace HorizonVenture.HorizonVenture.Controls
 {
     class Button : Control
     {
-        private Texture2D _background;
-        private string _text;
-        private SpriteFont _font;
+        protected Texture2D _background;
+        protected string _text;
+        protected SpriteFont _font;
 
         public Color DrawBackgroundColor { get; set; }
         public Color DrawFontColor { get; set; }
         public float RefreshPressMilliseconds { get; set; }
         private float _currentDelay;
 
-        private Vector2 _textPos;
-        private Vector2 _textCenter;
+        protected Vector2 _textPos;
+        protected Vector2 _textCenter;
 
         public delegate void ButtonClickHandler(object sender, ButtonclickArgs e);
 
@@ -42,8 +42,15 @@ namespace HorizonVenture.HorizonVenture.Controls
             _currentDelay = 0;
 
             _textPos = new Vector2(Position.Center.ToVector2().X, Position.Center.ToVector2().Y);
-            Vector2 size = _font.MeasureString(_text);
-            _textCenter = new Vector2(size.X / 2, size.Y / 2);
+            if (_font != null)
+            {
+                Vector2 size = _font.MeasureString(_text);
+                _textCenter = new Vector2(size.X / 2, size.Y / 2);
+            }
+            else
+            {
+                _textCenter = new Vector2(0, 0);
+            }
         }
 
         public override void Draw(SpriteBatch spriteBatch)

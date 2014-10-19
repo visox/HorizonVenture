@@ -44,6 +44,7 @@
     <Compile Include="HorizonVenture\Blocks\BlocksHolderPatterns\BlocksHolderPatternSupplier.cs" />
     <Compile Include="HorizonVenture\Controls\Button.cs" />
     <Compile Include="HorizonVenture\Controls\Control.cs" />
+    <Compile Include="HorizonVenture\Controls\ImageButton.cs" />
     <Compile Include="HorizonVenture\Controls\Panel.cs" />
     <Compile Include="HorizonVenture\Draw\ISpaceDrawable.cs" />
     <Compile Include="HorizonVenture\EntityComponents\EngineComponents\AbstractEngine.cs" />

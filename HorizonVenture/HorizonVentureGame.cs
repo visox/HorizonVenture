@@ -13,7 +13,7 @@ namespace HorizonVenture
         GraphicsDeviceManager _graphics;
         SpriteBatch _spriteBatch;
         Vector2 _baseScreenSize = new Vector2(1280, 680);
-        PlayerShip _playerShip;
+        public PlayerShip PlayerShip { get; private set;}
 
         MainMenuScreen _mainMenuScreen;
         InSpaceScreen _inSpaceScreen;
@@ -106,15 +106,15 @@ namespace HorizonVenture
         public void ShowShipEditScreen()
         {
             _shipEditScreen.Show();
-            _shipEditScreen.PlayerShip = _playerShip;
+            _shipEditScreen.PlayerShip = PlayerShip;
         }
 
 
         public void ShowInSpaceScreen()
-        {            
-            _horizonVentureSpace = new HorizonVentureSpace(this, _playerShip);
-            _playerShip = new PlayerShip(_horizonVentureSpace, new Vector2(0, 0));
-            _horizonVentureSpace.PlayerShip = _playerShip;
+        {
+            _horizonVentureSpace = new HorizonVentureSpace(this, PlayerShip);
+            PlayerShip = new PlayerShip(_horizonVentureSpace, new Vector2(0, 0));
+            _horizonVentureSpace.PlayerShip = PlayerShip;
             _inSpaceScreen.HorizonVentureSpace = _horizonVentureSpace;
             _inSpaceScreen.Show();
         }

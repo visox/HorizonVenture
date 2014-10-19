@@ -10,12 +10,13 @@ using System.Text;
 
 namespace HorizonVenture.HorizonVenture.EntityComponents
 {
-    abstract class AbstractEntityComponent
+    public abstract class AbstractEntityComponent
     {
         public AbstractSpaceEntity Owner { get; protected set; }
         public Vector2 PositionOnEntity { get; protected set; }
         public BlocksHolder BlocksHolder { get; protected set; }
         public Color Color { get; protected set; }
+        public float Angle { get; protected set; }
 
         public AbstractEntityComponent(AbstractSpaceEntity owner, Vector2 positionOnEntity)
         {
@@ -23,6 +24,7 @@ namespace HorizonVenture.HorizonVenture.EntityComponents
             PositionOnEntity = positionOnEntity;
             Color = Color.White;
             LoadBlocksHolder();
+            Angle = 0;
         }
 
         public AbstractEntityComponent(PlayerShip ps)
@@ -59,7 +61,7 @@ namespace HorizonVenture.HorizonVenture.EntityComponents
         {
 
             this.BlocksHolder.Draw(spriteBatch, GetDrawPosition(spacePositionOffset, scale, PositionOnEntity),
-                this.BlocksHolder.GetCenter(), Owner.Angle, Color, scale);
+                this.BlocksHolder.GetCenter(), Owner.Angle + Angle, Color, scale);
         }
 
         protected Vector2 GetDrawPosition(Vector2 spacePositionOffset, float scale, Vector2 onShipPosition)
@@ -79,8 +81,13 @@ namespace HorizonVenture.HorizonVenture.EntityComponents
         public virtual void DrawFree(SpriteBatch spriteBatch, Vector2 spacePositionOffset, Vector2 onShipPosition, float scale)
         {
 
-            this.BlocksHolder.Draw(spriteBatch, GetDrawPosition(spacePositionOffset, scale, onShipPosition),
-                this.BlocksHolder.GetCenter(), Owner.Angle, Color, scale);
+            BlocksHolder.Draw(spriteBatch, GetDrawPosition(spacePositionOffset, scale, onShipPosition),
+                BlocksHolder.GetCenter(), Owner.Angle, Color, scale);
+        }
+
+        public virtual Texture2D GetImage()
+        {
+            return BlocksHolder.GetImage();
         }
 
     }

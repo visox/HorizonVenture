@@ -6,7 +6,7 @@ using System.Text;
 
 namespace HorizonVenture.HorizonVenture.Blocks
 {
-    class AbstractBlock
+    public class AbstractBlock
     {
         protected string _id;
 

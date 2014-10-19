@@ -10,7 +10,7 @@ using System.Text;
 
 namespace HorizonVenture.HorizonVenture.Space.SpaceEntities
 {
-    abstract class AbstractSpaceEntity : ISpaceDrawable
+    public abstract class AbstractSpaceEntity : ISpaceDrawable
     {
         protected BlocksHolder _blocksHolder;
         protected Color _color;

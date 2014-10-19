@@ -7,7 +7,7 @@ using System.Text;
 
 namespace HorizonVenture.HorizonVenture.Blocks
 {
-    class BlocksHolder
+    public class BlocksHolder
     {
         Dictionary<Vector2, AbstractBlock> _blocks;
         private HorizonVentureGame _game;
@@ -97,9 +97,14 @@ namespace HorizonVenture.HorizonVenture.Blocks
         public void Draw(SpriteBatch spriteBatch, Vector2 position, Vector2 origin, float angle, Color color, float scale)
         {
 
-            spriteBatch.Draw(this._allTextures, position, null, color, angle, origin,
+            spriteBatch.Draw(_allTextures, position, null, color, angle, origin,
                scale, SpriteEffects.None, 0);
 
+        }
+
+        public Texture2D GetImage()
+        {
+            return _allTextures;
         }
 
     }

@@ -10,7 +10,7 @@ using System.Text;
 
 namespace HorizonVenture.HorizonVenture.Space.SpaceEntities.Ships
 {
-    class PlayerShip : AbstractShip
+    public class PlayerShip : AbstractShip
     {
 
         public List<AbstractEntityComponent> OwnedComponents { get; private set; }

@@ -15,6 +15,9 @@ namespace HorizonVenture.HorizonVenture.Screens
         public PlayerShip PlayerShip { get; set; }
         public Vector2 ScreenCenter { get; set; }
         public float Scale { get; set; }
+        public int ComponentsPanelIndex { get; set; }
+
+        private Panel _rightShipComponentsPanel;
 
         public ShipEditScreen(HorizonVentureGame game)
             : base(game)
@@ -22,6 +25,9 @@ namespace HorizonVenture.HorizonVenture.Screens
             _backgroundColor = Color.Black;
             ScreenCenter = new Vector2((game.GetScreenSize().X - PANEL_WIDTH )/ 2, game.GetScreenSize().Y / 2);
             Scale = 1;
+            ComponentsPanelIndex = 0;
+
+            
         }
 
         private static readonly int BUTTON_WIDTH = 300;
@@ -34,6 +40,7 @@ namespace HorizonVenture.HorizonVenture.Screens
         protected override void Init()
         {
             InputManager.AddKeyPressHandlers(Keys.S, sKeyPressed);
+            PlayerShip = _game.PlayerShip;
 
             if (_controls.Count != 0)
                 return;
@@ -59,13 +66,61 @@ namespace HorizonVenture.HorizonVenture.Screens
             _controls.Add(minusButton);
 
 
-            Panel rightShipComponentsPanel = new Panel(background, 
-                new Rectangle((int)(screenSize.X - PANEL_WIDTH), 0, PANEL_WIDTH, (int)(screenSize.Y)));
 
-           
+            AddRightShipComponentsPanel();
+        }
 
-            _controls.Add(rightShipComponentsPanel);
-            
+        private static readonly int COMPONENTS_SHOW_COUNT = 5;
+
+        private void AddRightShipComponentsPanel()
+        {
+            Texture2D background = _game.GetContent().Load<Texture2D>(@"Controls\Buttons\background1");
+            SpriteFont spriteFont = _game.GetContent().Load<SpriteFont>(@"Fonts\Button");
+            Vector2 screenSize = _game.GetScreenSize();
+
+            _rightShipComponentsPanel = new Panel(background,
+                           new Rectangle((int)(screenSize.X - PANEL_WIDTH), 0, PANEL_WIDTH, (int)(screenSize.Y)));
+
+            _controls.Add(_rightShipComponentsPanel);
+
+
+            AddComponentsToRightPanel();
+        }
+
+        private static readonly float COMPONENTS_IMAGEBUTTON_SIZE = 200;
+        private static readonly float COMPONENTS_IMAGEBUTTON_MARGIN = 20;
+
+        private void AddComponentsToRightPanel()
+        {
+            _rightShipComponentsPanel.Controls.Clear();
+
+            Texture2D background = _game.GetContent().Load<Texture2D>(@"Controls\Buttons\background1");
+            SpriteFont spriteFont = _game.GetContent().Load<SpriteFont>(@"Fonts\Button");
+            Vector2 screenSize = _game.GetScreenSize();
+
+            for (int i = ComponentsPanelIndex; i < COMPONENTS_SHOW_COUNT + ComponentsPanelIndex; i++)
+            {
+                if (i >= PlayerShip.OwnedComponents.Count)
+                    break;
+
+                Texture2D componentImage = PlayerShip.OwnedComponents[i].GetImage();
+
+                ImageButton addComponentButton = new ImageButton(background, componentImage,
+                    new Rectangle(
+                        (int)(_rightShipComponentsPanel.Position.Left +
+                            ((_rightShipComponentsPanel.Position.Width - COMPONENTS_IMAGEBUTTON_SIZE) / 2)),
+                        (int)(_rightShipComponentsPanel.Position.Top + COMPONENTS_IMAGEBUTTON_MARGIN +
+                            ((COMPONENTS_IMAGEBUTTON_SIZE + COMPONENTS_IMAGEBUTTON_MARGIN) * (i - ComponentsPanelIndex))),
+                        (int)COMPONENTS_IMAGEBUTTON_SIZE, 
+                        (int)COMPONENTS_IMAGEBUTTON_SIZE));
+
+                addComponentButton.Scale = 1f;
+
+                addComponentButton.DrawBackgroundColor = Color.White;
+                addComponentButton.Click += addComponentButton_Click;
+
+                _controls.Add(addComponentButton);
+            }
         }
 
         protected override void UnInit()
@@ -84,6 +139,8 @@ namespace HorizonVenture.HorizonVenture.Screens
 
             DrawControls(spriteBatch);
         }
+
+
 
         private void DrawShip(SpriteBatch spriteBatch)
         {
@@ -108,6 +165,12 @@ namespace HorizonVenture.HorizonVenture.Screens
         {
             if (Scale > 1.0f/8.0f)
                 Scale /= 2f;
+        }
+
+
+        void addComponentButton_Click(object sender, Button.ButtonclickArgs e)
+        {
+            //todo
         }
     }
 }

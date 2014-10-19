@@ -6,7 +6,7 @@ using System.Text;
 
 namespace HorizonVenture.HorizonVenture.Space.SpaceEntities.Ships
 {
-    abstract class AbstractShip: AbstractSpaceEntity
+    public abstract class AbstractShip: AbstractSpaceEntity
     {
         public AbstractShip(HorizonVentureSpace space, Vector2 spacePosition)
             : base(space, spacePosition)
