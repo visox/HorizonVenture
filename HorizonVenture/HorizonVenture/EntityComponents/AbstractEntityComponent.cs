@@ -58,22 +58,30 @@ namespace HorizonVenture.HorizonVenture.EntityComponents
         public virtual void Draw(SpriteBatch spriteBatch, Vector2 spacePositionOffset, float scale)
         {
 
-            this.BlocksHolder.Draw(spriteBatch, GetDrawPosition(spacePositionOffset, scale),
+            this.BlocksHolder.Draw(spriteBatch, GetDrawPosition(spacePositionOffset, scale, PositionOnEntity),
                 this.BlocksHolder.GetCenter(), Owner.Angle, Color, scale);
         }
 
-        protected Vector2 GetDrawPosition(Vector2 spacePositionOffset, float scale)
+        protected Vector2 GetDrawPosition(Vector2 spacePositionOffset, float scale, Vector2 onShipPosition)
         {
             _drawPosition.X = Owner.SpacePosition.X;
             _drawPosition.Y = Owner.SpacePosition.Y;
 
-            _drawPosition.X += PositionOnEntity.X * scale;
-            _drawPosition.Y += PositionOnEntity.Y * scale;
+            _drawPosition.X += onShipPosition.X * scale;
+            _drawPosition.Y += onShipPosition.Y * scale;
 
             _drawPosition.X += spacePositionOffset.X;
             _drawPosition.Y += spacePositionOffset.Y;
 
             return _drawPosition;
         }
+
+        public virtual void DrawFree(SpriteBatch spriteBatch, Vector2 spacePositionOffset, Vector2 onShipPosition, float scale)
+        {
+
+            this.BlocksHolder.Draw(spriteBatch, GetDrawPosition(spacePositionOffset, scale, onShipPosition),
+                this.BlocksHolder.GetCenter(), Owner.Angle, Color, scale);
+        }
+
     }
 }
