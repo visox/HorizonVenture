@@ -114,6 +114,7 @@ namespace HorizonVenture.HorizonVenture.Screens
                         (int)COMPONENTS_IMAGEBUTTON_SIZE, 
                         (int)COMPONENTS_IMAGEBUTTON_SIZE));
 
+                addComponentButton.Tag = i.ToString();
                 addComponentButton.Scale = 1f;
 
                 addComponentButton.DrawBackgroundColor = Color.White;
@@ -138,6 +139,8 @@ namespace HorizonVenture.HorizonVenture.Screens
             DrawShip(spriteBatch);
 
             DrawControls(spriteBatch);
+
+            DrawCursor(spriteBatch);
         }
 
 
@@ -168,9 +171,18 @@ namespace HorizonVenture.HorizonVenture.Screens
         }
 
 
+        protected override void DrawCursorTexture(SpriteBatch spriteBatch)
+        {
+            spriteBatch.Draw(_cursor, _cursorPosition, null, _cursorDrawColor, 0, _cursorCenter,
+               Scale, SpriteEffects.None, 0);
+        }
+
+
         void addComponentButton_Click(object sender, Button.ButtonclickArgs e)
         {
-            //todo
+            _cursor = PlayerShip.OwnedComponents[int.Parse(e.Tag)].GetImage();
+            _cursorCenter.X = _cursor.Width / 2;
+            _cursorCenter.Y = _cursor.Height / 2;
         }
     }
 }

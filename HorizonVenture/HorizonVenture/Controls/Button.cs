@@ -16,6 +16,7 @@ namespace HorizonVenture.HorizonVenture.Controls
         public Color DrawBackgroundColor { get; set; }
         public Color DrawFontColor { get; set; }
         public float RefreshPressMilliseconds { get; set; }
+        public String Tag { get; set; }
         private float _currentDelay;
 
         protected Vector2 _textPos;
@@ -32,6 +33,7 @@ namespace HorizonVenture.HorizonVenture.Controls
             _background = background;
             _text = text;
             _font = font;
+            Tag = "";
 
             Position = position;
 
@@ -90,7 +92,7 @@ namespace HorizonVenture.HorizonVenture.Controls
                 {
                     if (Click != null)
                     {
-                        Click(this, new ButtonclickArgs());
+                        Click(this, new ButtonclickArgs(Tag));
                         _currentDelay = RefreshPressMilliseconds;
                     }
                 }
@@ -100,8 +102,15 @@ namespace HorizonVenture.HorizonVenture.Controls
 
         public class ButtonclickArgs : EventArgs
         {
+            public String Tag { get; private set; }
+
             public ButtonclickArgs()
             {
+            }
+
+            public ButtonclickArgs(String tag)
+            {
+                Tag = tag;
             }
         }
 

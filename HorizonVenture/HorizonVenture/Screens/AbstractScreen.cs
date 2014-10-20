@@ -12,6 +12,7 @@ namespace HorizonVenture.HorizonVenture.Screens
     {
         protected HorizonVentureGame _game;
         protected Color _backgroundColor = Color.Black;
+        
 
         public static AbstractScreen CurrentScreen { get; private set; }
 
@@ -36,6 +37,7 @@ namespace HorizonVenture.HorizonVenture.Screens
         { 
         }
 
+        
         public virtual void Update(GameTime gameTime)
         {
             foreach (Control c in _controls)
@@ -46,6 +48,8 @@ namespace HorizonVenture.HorizonVenture.Screens
             DrawBackgroundColor();
 
             DrawControls(spriteBatch);
+
+            DrawCursor(spriteBatch);
         }
 
         protected void DrawControls(SpriteBatch spriteBatch)
@@ -58,5 +62,28 @@ namespace HorizonVenture.HorizonVenture.Screens
         {
             _game.GetGraphicsDevice().Clear(_backgroundColor);            
         }
+
+        protected Vector2 _cursorCenter = new Vector2(0, 0);
+        protected Vector2 _cursorPosition = new Vector2(0, 0);
+        protected Texture2D _cursor = null;
+        protected Color _cursorDrawColor = Color.White;
+
+        protected virtual void DrawCursor(SpriteBatch spriteBatch)
+        {
+            if (_cursor != null)
+            {
+                _cursorPosition.X = InputManager.MouseState.X;
+                _cursorPosition.Y = InputManager.MouseState.Y;
+
+                DrawCursorTexture(spriteBatch);
+            }
+        }
+
+        protected virtual void DrawCursorTexture(SpriteBatch spriteBatch)
+        {
+            spriteBatch.Draw(_cursor, _cursorPosition, null, _cursorDrawColor, 0, _cursorCenter,
+               1, SpriteEffects.None, 0);
+        }
+
     }
 }
