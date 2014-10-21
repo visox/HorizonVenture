@@ -13,5 +13,10 @@ namespace HorizonVenture.HorizonVenture.Controls
 
         public abstract void Draw(SpriteBatch spriteBatch);
         public abstract void Update(GameTime gameTime);
+
+        public Boolean IsPointOverControl(Point p)
+        {
+            return Position.Contains(p);
+        }
     }
 }

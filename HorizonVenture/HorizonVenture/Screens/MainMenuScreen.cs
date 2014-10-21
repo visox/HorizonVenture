@@ -29,7 +29,7 @@ namespace HorizonVenture.HorizonVenture.Screens
                 return;
 
             Texture2D background = _game.GetContent().Load<Texture2D>(@"Controls\Buttons\background1");
-            SpriteFont spriteFont = _game.GetContent().Load<SpriteFont>(@"Fonts\Button");
+            SpriteFont spriteFont = _game.GetContent().Load<SpriteFont>(@"Controls\Buttons\Fonts\Button");
 
 
 

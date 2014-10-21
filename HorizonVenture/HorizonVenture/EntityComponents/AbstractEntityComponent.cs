@@ -13,7 +13,7 @@ namespace HorizonVenture.HorizonVenture.EntityComponents
     public abstract class AbstractEntityComponent
     {
         public AbstractSpaceEntity Owner { get; protected set; }
-        public Vector2 PositionOnEntity { get; protected set; }
+        public Vector2 PositionOnEntity { get; set; }
         public BlocksHolder BlocksHolder { get; protected set; }
         public Color Color { get; protected set; }
         public float Angle { get; protected set; }
@@ -30,7 +30,6 @@ namespace HorizonVenture.HorizonVenture.EntityComponents
         public AbstractEntityComponent(PlayerShip ps)
         {
             Owner = ps;
-            ps.OwnedComponents.Add(this);
             Color = Color.White;
             LoadBlocksHolder();
         }
@@ -69,8 +68,8 @@ namespace HorizonVenture.HorizonVenture.EntityComponents
             _drawPosition.X = Owner.SpacePosition.X;
             _drawPosition.Y = Owner.SpacePosition.Y;
 
-            _drawPosition.X += onShipPosition.X * scale;
-            _drawPosition.Y += onShipPosition.Y * scale;
+            _drawPosition.X += onShipPosition.X * scale * BlocksHolder.SCALE_1_BLOCK_SIZE;
+            _drawPosition.Y += onShipPosition.Y * scale * BlocksHolder.SCALE_1_BLOCK_SIZE;
 
             _drawPosition.X += spacePositionOffset.X;
             _drawPosition.Y += spacePositionOffset.Y;

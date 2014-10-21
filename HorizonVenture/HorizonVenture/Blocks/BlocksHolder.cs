@@ -14,7 +14,7 @@ namespace HorizonVenture.HorizonVenture.Blocks
         private Texture2D _allTextures;
         private int _maxX, _minX, _maxY, _minY;
 
-        private static readonly int SCALE_1_BLOCK_SIZE = 16;
+        public static readonly int SCALE_1_BLOCK_SIZE = 16;
 
 
         public BlocksHolder(HorizonVentureGame game)

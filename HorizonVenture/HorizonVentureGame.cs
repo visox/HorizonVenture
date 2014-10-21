@@ -57,8 +57,11 @@ namespace HorizonVenture
 
             _inSpaceScreen = new InSpaceScreen(this);
 
-            _shipEditScreen = new ShipEditScreen(this);       
+            _shipEditScreen = new ShipEditScreen(this);
 
+
+            _horizonVentureSpace = new HorizonVentureSpace(this, PlayerShip);
+            PlayerShip = new PlayerShip(_horizonVentureSpace, new Vector2(0, 0));
         }
 
         protected override void UnloadContent()
@@ -112,8 +115,7 @@ namespace HorizonVenture
 
         public void ShowInSpaceScreen()
         {
-            _horizonVentureSpace = new HorizonVentureSpace(this, PlayerShip);
-            PlayerShip = new PlayerShip(_horizonVentureSpace, new Vector2(0, 0));
+            
             _horizonVentureSpace.PlayerShip = PlayerShip;
             _inSpaceScreen.HorizonVentureSpace = _horizonVentureSpace;
             _inSpaceScreen.Show();

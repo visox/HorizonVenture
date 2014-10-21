@@ -43,8 +43,8 @@ namespace HorizonVenture.HorizonVenture.Controls
             _imagePosition.X += (Position.Width) / 2.0f;
             _imagePosition.Y += (Position.Height) / 2.0f;
 
-            _imageOrigin.X = (Image.Width * Scale) / 2.0f;
-            _imageOrigin.Y = (Image.Height * Scale) / 2.0f;
+            _imageOrigin.X = (Image.Width) / 2.0f;
+            _imageOrigin.Y = (Image.Height) / 2.0f;
 
        
             spriteBatch.Draw(Image, _imagePosition, null, DrawImageColor, Angle, _imageOrigin,

@@ -20,9 +20,11 @@ namespace HorizonVenture.HorizonVenture.Space.SpaceEntities.Ships
         {
             _blocksHolder = BlocksHolderPatternSupplier.getExampleShipPatter(horizonVentureSpace.getGame());
 
-            EntityComponents.Add(new SimpleEngine(this, new Vector2(20,20)));
+        //    EntityComponents.Add(new SimpleEngine(this, new Vector2(0,0)));
 
             OwnedComponents = new List<AbstractEntityComponent>();
+            OwnedComponents.Add(new SimpleEngine(this));
+            OwnedComponents.Add(new SimpleEngine(this));
             OwnedComponents.Add(new SimpleEngine(this));
         }
 

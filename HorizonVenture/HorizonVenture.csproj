@@ -58,7 +58,7 @@
     <Compile Include="HorizonVenture\SpaceEntities\AbstractSpaceEntity.cs" />
     <Compile Include="HorizonVenture\SpaceEntities\Ships\AbstractShip.cs" />
     <Compile Include="HorizonVenture\SpaceEntities\Ships\PlayerShip.cs" />
-    <Compile Include="InputHandler.cs" />
+    <Compile Include="InputManager.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -73,26 +73,31 @@
     <Content Include="Icon.ico" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Content\Fonts\Button.xnb">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-  </ItemGroup>
-  <ItemGroup>
     <Content Include="Content\Blocks\bunker_galvanized.xnb">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\Controls\Buttons\background1.xnb">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\Blocks\GraniteTechno.xnb">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Content\Blocks\GreenSpeckledTile.xnb">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Content\Controls\Buttons\background0.xnb">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Content\Controls\Buttons\Fonts\Button.xnb">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
