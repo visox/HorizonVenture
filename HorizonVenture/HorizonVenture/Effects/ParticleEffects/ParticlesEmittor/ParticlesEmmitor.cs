@@ -44,6 +44,7 @@ namespace HorizonVenture.HorizonVenture.Effects.ParticleEffects.ParticlesEmittor
             AddNewParticles();
             UpdateParticlesPosition();
             UpdateParticlesAppearance();
+            RemoveOldParticles();
         }
 
         private void UpdateParticlesAppearance()
@@ -106,6 +107,11 @@ namespace HorizonVenture.HorizonVenture.Effects.ParticleEffects.ParticlesEmittor
             {
                 ParticlesSource.Update(gameTime);
             }
+        }
+
+        private void RemoveOldParticles()
+        {
+            Particles.RemoveAll(p => p.Remove());
         }
 
         protected void UpdateParticles(GameTime gameTime)

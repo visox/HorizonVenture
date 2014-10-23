@@ -15,10 +15,15 @@ namespace HorizonVenture.HorizonVenture.Screens
 
         public HorizonVentureSpace HorizonVentureSpace { get; set; }
 
+        private int _fps;
+        private SpriteFont _sp;
+
         public InSpaceScreen(HorizonVentureGame game)
             : base(game)
         {
             _backgroundColor = Color.Black;
+
+            _sp = _game.GetContent().Load<SpriteFont>(@"Controls\Buttons\Fonts\Button");
         }
 
         protected override void Init()
@@ -49,6 +54,18 @@ namespace HorizonVenture.HorizonVenture.Screens
            
 
             DrawControls(spriteBatch);
+
+            DrawFps(spriteBatch);
+        }
+
+        private void DrawFps(SpriteBatch spriteBatch)
+        {
+            spriteBatch.DrawString(_sp, String.Format("{0}", _fps), new Vector2(0, 0), Color.White);
+        }
+
+        private void UpdateFps(GameTime gameTime)
+        {
+            _fps = (int)(1.0 / (gameTime.ElapsedGameTime.Milliseconds / 1000.0));
         }
 
         public override void Update(GameTime gameTime)
@@ -57,6 +74,8 @@ namespace HorizonVenture.HorizonVenture.Screens
 
             if (HorizonVentureSpace != null)
                 HorizonVentureSpace.Update(gameTime);
+
+            UpdateFps(gameTime);
         }
     }
 }
