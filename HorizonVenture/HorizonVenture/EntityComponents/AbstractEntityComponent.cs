@@ -65,14 +65,14 @@ namespace HorizonVenture.HorizonVenture.EntityComponents
 
         protected Vector2 GetDrawPosition(Vector2 spacePositionOffset, float scale, Vector2 onShipPosition)
         {
-            _drawPosition.X = Owner.SpacePosition.X;
-            _drawPosition.Y = Owner.SpacePosition.Y;
+            _drawPosition.X = Owner.SpacePosition.X * scale;
+            _drawPosition.Y = Owner.SpacePosition.Y * scale;
 
             _drawPosition.X += onShipPosition.X * scale * BlocksHolder.SCALE_1_BLOCK_SIZE;
             _drawPosition.Y += onShipPosition.Y * scale * BlocksHolder.SCALE_1_BLOCK_SIZE;
 
-            _drawPosition.X += spacePositionOffset.X;
-            _drawPosition.Y += spacePositionOffset.Y;
+            _drawPosition.X += spacePositionOffset.X * scale;
+            _drawPosition.Y += spacePositionOffset.Y * scale;
 
             return _drawPosition;
         }
@@ -87,6 +87,11 @@ namespace HorizonVenture.HorizonVenture.EntityComponents
         public virtual Texture2D GetImage()
         {
             return BlocksHolder.GetImage();
+        }
+
+        public virtual void Update(GameTime gameTime)
+        {
+ 
         }
 
     }

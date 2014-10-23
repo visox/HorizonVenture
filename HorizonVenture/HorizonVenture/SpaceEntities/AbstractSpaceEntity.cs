@@ -34,7 +34,7 @@ namespace HorizonVenture.HorizonVenture.Space.SpaceEntities
 
         public virtual void Draw(SpriteBatch spriteBatch, Vector2 spacePositionOffset, float scale)
         {
-            this.BlocksHolder.Draw(spriteBatch, GetDrawPosition(spacePositionOffset), 
+            this.BlocksHolder.Draw(spriteBatch, GetDrawPosition(spacePositionOffset, scale), 
                 this.BlocksHolder.GetCenter(), Angle, _color, scale);
 
             DrawEntityComponents(spriteBatch, spacePositionOffset, scale);
@@ -48,20 +48,25 @@ namespace HorizonVenture.HorizonVenture.Space.SpaceEntities
             }
         }
 
-        protected Vector2 GetDrawPosition(Vector2 spacePositionOffset)
+        protected Vector2 GetDrawPosition(Vector2 spacePositionOffset, float scale)
         {
-            _drawPosition.X = SpacePosition.X;
-            _drawPosition.Y = SpacePosition.Y;
+            _drawPosition.X = SpacePosition.X * scale;
+            _drawPosition.Y = SpacePosition.Y * scale;
 
-            _drawPosition.X += spacePositionOffset.X;
-            _drawPosition.Y += spacePositionOffset.Y;
+            _drawPosition.X += spacePositionOffset.X * scale;
+            _drawPosition.Y += spacePositionOffset.Y * scale;
 
             return _drawPosition;
         }
 
         public virtual void Update(GameTime gameTime)
         {
- 
+            UpdateEntityComponents(gameTime);
+        }
+
+        protected void UpdateEntityComponents(GameTime gameTime)
+        {
+            EntityComponents.ForEach(ec => ec.Update(gameTime));
         }
 
 

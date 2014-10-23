@@ -36,7 +36,7 @@ namespace HorizonVenture.HorizonVenture.Space
             _game = game;
 
             _spacePositionOffset = new Vector2();
-            _worldScale = 0.25f;
+            _worldScale = 0.5f;
 
             _entities = new List<AbstractSpaceEntity>();
 
@@ -56,8 +56,8 @@ namespace HorizonVenture.HorizonVenture.Space
 
         public void Draw(SpriteBatch spriteBatch)
         {
-            _spacePositionOffset.X = -PlayerShip.SpacePosition.X + (_game.GetScreenSize().X / 2);
-            _spacePositionOffset.Y = -PlayerShip.SpacePosition.Y + (_game.GetScreenSize().Y / 2);
+            _spacePositionOffset.X = -PlayerShip.SpacePosition.X + ((_game.GetScreenSize().X / 2) / _worldScale);
+            _spacePositionOffset.Y = -PlayerShip.SpacePosition.Y + ((_game.GetScreenSize().Y / 2) / _worldScale);
 
             removeNullEntities();
 

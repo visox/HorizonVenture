@@ -36,6 +36,8 @@ namespace HorizonVenture.HorizonVenture.Space.SpaceEntities.Ships
           //  userInputHandle();
 
           //  rotate(gameTime.ElapsedGameTime.Milliseconds);
+
+            base.Update(gameTime);
         }
 
         private void rotate(double delta)
