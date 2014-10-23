@@ -12,7 +12,7 @@ namespace HorizonVenture.HorizonVenture.Space.SpaceEntities
 {
     public abstract class AbstractSpaceEntity : ISpaceDrawable
     {
-        protected BlocksHolder _blocksHolder;
+        public BlocksHolder BlocksHolder { get; protected set; }
         protected Color _color;
 
         public List<AbstractEntityComponent> EntityComponents { get; protected set; }
@@ -34,8 +34,8 @@ namespace HorizonVenture.HorizonVenture.Space.SpaceEntities
 
         public virtual void Draw(SpriteBatch spriteBatch, Vector2 spacePositionOffset, float scale)
         {
-            this._blocksHolder.Draw(spriteBatch, GetDrawPosition(spacePositionOffset), 
-                this._blocksHolder.GetCenter(), Angle, _color, scale);
+            this.BlocksHolder.Draw(spriteBatch, GetDrawPosition(spacePositionOffset), 
+                this.BlocksHolder.GetCenter(), Angle, _color, scale);
 
             DrawEntityComponents(spriteBatch, spacePositionOffset, scale);
         }

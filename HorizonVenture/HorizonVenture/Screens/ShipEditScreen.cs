@@ -1,4 +1,5 @@
-﻿using HorizonVenture.HorizonVenture.Controls;
+﻿using HorizonVenture.HorizonVenture.Blocks;
+using HorizonVenture.HorizonVenture.Controls;
 using HorizonVenture.HorizonVenture.EntityComponents;
 using HorizonVenture.HorizonVenture.Space.SpaceEntities.Ships;
 using Microsoft.Xna.Framework;
@@ -14,7 +15,9 @@ namespace HorizonVenture.HorizonVenture.Screens
     class ShipEditScreen : AbstractScreen
     {
         public PlayerShip PlayerShip { get; set; }
-        public Vector2 ScreenCenter { get; set; }
+
+
+        public Vector2 _screenCenter;
         public float Scale { get; set; }
         public int ComponentsPanelIndex { get; set; }
 
@@ -24,7 +27,7 @@ namespace HorizonVenture.HorizonVenture.Screens
             : base(game)
         {
             _backgroundColor = Color.Black;
-            ScreenCenter = new Vector2((game.GetScreenSize().X - PANEL_WIDTH )/ 2, game.GetScreenSize().Y / 2);
+            _screenCenter = new Vector2((game.GetScreenSize().X - PANEL_WIDTH )/ 2, game.GetScreenSize().Y / 2);
             Scale = 1;
             ComponentsPanelIndex = 0;            
         }
@@ -46,6 +49,9 @@ namespace HorizonVenture.HorizonVenture.Screens
             InputManager.OnMouseRightKeyPress += mouseRightKeyPressed;
 
             InputManager.OnMouseScrollChange += mouseScrollChanged;
+
+            InputManager.OnMouseLeftKeyRelease += _wasMouseLeftKeyReleased;
+            InputManager.OnMousePositionChanged += mousePositionChanged;
 
             if (_controls.Count != 0)
                 return;
@@ -75,17 +81,61 @@ namespace HorizonVenture.HorizonVenture.Screens
             AddRightShipComponentsPanel();
         }
 
+        private void mousePositionChanged(object sender, InputManager.MousePositionChangedArgs e)
+        {
+            if (_isScreenMove)
+            {
+                _screenCenter.X += e.ChangeX;
+                _screenCenter.Y += e.ChangeY;
+            }
+        }
+
+        private void _wasMouseLeftKeyReleased(object sender, InputManager.MouseKeyReleaseArgs e)
+        {
+            if (_isScreenMove)
+            {
+                _isScreenMove = false;
+            }
+        }
+
+        private Vector2 _toCenter = new Vector2(0, 0);
+
         private void mouseScrollChanged(object sender, InputManager.MouseScrollChangeArgs e)
         {
-            if (e.Change > 0)
+            if (e.Change < 0)
             {
                 if (Scale > 1.0f / 8.0f)
+                {
                     Scale /= 2f;
+
+                    _toCenter.X = ((_game.GetScreenSize().X - PANEL_WIDTH) / 2)
+                        + ((_screenCenter.X - ((_game.GetScreenSize().X - PANEL_WIDTH) / 2)) / 2);
+                    _toCenter.Y = (_game.GetScreenSize().Y / 2)
+                        + ((_screenCenter.Y - (_game.GetScreenSize().Y / 2)) / 2);
+
+                    _screenCenter.X -= _screenCenter.X - _toCenter.X;
+                    _screenCenter.Y -= _screenCenter.Y - _toCenter.Y;
+                }
             }
             else
             {
                 if (Scale < 1)
+                {
                     Scale *= 2f;
+
+                    _screenCenter.X += _screenCenter.X - _cursorPosition.X;
+                    _screenCenter.Y += _screenCenter.Y - _cursorPosition.Y;
+
+                    if((((PlayerShip.BlocksHolder.GetWidth() * (BlocksHolder.SCALE_1_BLOCK_SIZE * Scale)) / 2) + _screenCenter.X) < 0)
+                    {
+                        _screenCenter.X = 0;
+                    }
+                    if ((-((PlayerShip.BlocksHolder.GetWidth() * (BlocksHolder.SCALE_1_BLOCK_SIZE * Scale))  / 2) + _screenCenter.X) >
+                        _game.GetScreenSize().X - PANEL_WIDTH)
+                    {
+                        _screenCenter.X = _game.GetScreenSize().X - PANEL_WIDTH;
+                    }
+                }
             }
         }
 
@@ -93,8 +143,8 @@ namespace HorizonVenture.HorizonVenture.Screens
 
         private Vector2 GetCursorPositionOnShip()
         {
-            _cursorPositionOnShip.X = InputManager.MouseState.X - ScreenCenter.X;
-            _cursorPositionOnShip.Y = InputManager.MouseState.Y - ScreenCenter.Y;
+            _cursorPositionOnShip.X = InputManager.MouseState.X - _screenCenter.X;
+            _cursorPositionOnShip.Y = InputManager.MouseState.Y - _screenCenter.Y;
 
             _cursorPositionOnShip.X /= Blocks.BlocksHolder.SCALE_1_BLOCK_SIZE * Scale;
             _cursorPositionOnShip.Y /= Blocks.BlocksHolder.SCALE_1_BLOCK_SIZE * Scale;
@@ -105,30 +155,56 @@ namespace HorizonVenture.HorizonVenture.Screens
             return _cursorPositionOnShip;
         }
 
+        private Boolean IsLeftMouseKeyPressAddComponent()
+        {
+            if (_selectedComponent == -1)
+                return false;
 
+            if (_rightShipComponentsPanel.IsPointOverControl(new Point(InputManager.MouseState.X, InputManager.MouseState.Y)))
+                return false;
+
+            return true;
+
+        }
+
+        private Boolean IsLeftMouseKeyPressMoveScreen()
+        { 
+            if(_selectedComponent != -1)
+                return false;
+
+            if (_rightShipComponentsPanel.IsPointOverControl(new Point(InputManager.MouseState.X, InputManager.MouseState.Y)))
+                return false;
+
+            return true;
+        }
+
+        private Boolean _isScreenMove = false;
 
         private void mouseLeftKeyPressed(object sender, InputManager.MouseKeyPressArgs e)
         {
-            if (_selectedComponent == -1)
-                return;
 
-            if (_rightShipComponentsPanel.IsPointOverControl(new Point(InputManager.MouseState.X, InputManager.MouseState.Y)))
-                return;
+            if (IsLeftMouseKeyPressAddComponent())
+            {
+                Vector2 toAddPosition = GetCursorPositionOnShip();
+                //  Vector2 toAddPosition = new Vector2(toAddPositionTmp.X, toAddPositionTmp.Y);
 
-            Vector2 toAddPosition = GetCursorPositionOnShip();
-          //  Vector2 toAddPosition = new Vector2(toAddPositionTmp.X, toAddPositionTmp.Y);
+                AbstractEntityComponent aec = PlayerShip.OwnedComponents[_selectedComponent];
 
-            AbstractEntityComponent aec = PlayerShip.OwnedComponents[_selectedComponent];
+                aec.PositionOnEntity = toAddPosition;
 
-            aec.PositionOnEntity = toAddPosition;
+                PlayerShip.EntityComponents.Add(aec);
+                PlayerShip.OwnedComponents.Remove(aec);
 
-            PlayerShip.EntityComponents.Add(aec);
-            PlayerShip.OwnedComponents.Remove(aec);
+                AddRightShipComponentsPanel();
 
-            AddRightShipComponentsPanel();
+                _selectedComponent = -1;
+                _cursor = null;
+            }
 
-            _selectedComponent = -1;
-            _cursor = null;
+            if (IsLeftMouseKeyPressMoveScreen())
+            {
+                _isScreenMove = true;
+            }
         }
 
         private void mouseRightKeyPressed(object sender, InputManager.MouseKeyPressArgs e)
@@ -216,6 +292,9 @@ namespace HorizonVenture.HorizonVenture.Screens
             InputManager.OnMouseRightKeyPress -= mouseRightKeyPressed;
 
             InputManager.OnMouseScrollChange -= mouseScrollChanged;
+
+            InputManager.OnMouseLeftKeyRelease -= _wasMouseLeftKeyReleased;
+            InputManager.OnMousePositionChanged -= mousePositionChanged;
         }
 
         public override void Draw(SpriteBatch spriteBatch)
@@ -235,7 +314,7 @@ namespace HorizonVenture.HorizonVenture.Screens
         {
             if (PlayerShip != null)
             {
-                PlayerShip.DetailShipDraw(spriteBatch, ScreenCenter, Scale);
+                PlayerShip.DetailShipDraw(spriteBatch, _screenCenter, Scale);
             }
         }
 

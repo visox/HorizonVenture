@@ -18,7 +18,7 @@ namespace HorizonVenture.HorizonVenture.Space.SpaceEntities.Ships
         public PlayerShip(HorizonVentureSpace horizonVentureSpace, Vector2 spacePosition)
             : base(horizonVentureSpace, spacePosition)
         {
-            _blocksHolder = BlocksHolderPatternSupplier.getExampleShipPatter(horizonVentureSpace.getGame());
+            BlocksHolder = BlocksHolderPatternSupplier.getExampleShipPatter(horizonVentureSpace.getGame());
 
         //    EntityComponents.Add(new SimpleEngine(this, new Vector2(0,0)));
 
@@ -74,8 +74,8 @@ namespace HorizonVenture.HorizonVenture.Space.SpaceEntities.Ships
 
         public void DetailShipDraw(SpriteBatch spriteBatch, Vector2 screenCenter, float scale)
         {
-            this._blocksHolder.Draw(spriteBatch, screenCenter,
-                this._blocksHolder.GetCenter(), 0, _color, scale);
+            this.BlocksHolder.Draw(spriteBatch, screenCenter,
+                this.BlocksHolder.GetCenter(), 0, _color, scale);
 
             DrawEntityComponents(spriteBatch, screenCenter, scale);
         }

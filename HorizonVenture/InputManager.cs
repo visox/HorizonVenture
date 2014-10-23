@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework.Input;
+﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Input;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -90,16 +91,29 @@ namespace HorizonVenture
         private static bool _wasMouseLeftKeyPressed = false;
         private static bool _wasMouseRightKeyPressed = false;
 
+        private static Vector2 _lastMousePosition = new Vector2(0, 0);
+
         private static void CheckMouseKeysPressEvents()
         {
-            if (MouseState.LeftButton == ButtonState.Pressed && !_wasMouseLeftKeyPressed)
+            if (MouseState.LeftButton == ButtonState.Pressed)
             {
+                if (!_wasMouseLeftKeyPressed)
+                {
+                    if (OnMouseLeftKeyPress != null)
+                        OnMouseLeftKeyPress(null, new MouseKeyPressArgs());
+                }
+
                 _wasMouseLeftKeyPressed = true;
-                if (OnMouseLeftKeyPress != null)
-                    OnMouseLeftKeyPress(null, new MouseKeyPressArgs());
             }
             if (MouseState.LeftButton == ButtonState.Released)
             {
+ 
+                if (_wasMouseLeftKeyPressed)
+                {
+                    if (OnMouseLeftKeyRelease != null)
+                        OnMouseLeftKeyRelease(null, new MouseKeyReleaseArgs());
+                }
+
                 _wasMouseLeftKeyPressed = false;
             }
 
@@ -112,6 +126,20 @@ namespace HorizonVenture
             if (MouseState.RightButton == ButtonState.Released)
             {
                 _wasMouseRightKeyPressed = false;
+            }
+
+            ////////////////
+            if (_lastMousePosition.X != MouseState.X
+                || _lastMousePosition.Y != MouseState.Y)
+            {
+                if (OnMousePositionChanged != null)
+                {
+                    OnMousePositionChanged(null, new MousePositionChangedArgs(MouseState.X - _lastMousePosition.X,
+                        MouseState.Y - _lastMousePosition.Y));
+                }
+
+                _lastMousePosition.X = MouseState.X;
+                _lastMousePosition.Y = MouseState.Y;
             }
         }
 
@@ -126,6 +154,34 @@ namespace HorizonVenture
             {
             }
         }
+
+        public static MouseKeyReleaseHandler OnMouseLeftKeyRelease;
+
+        public delegate void MouseKeyReleaseHandler(object sender, MouseKeyReleaseArgs e);
+
+        public class MouseKeyReleaseArgs : EventArgs
+        {
+            public MouseKeyReleaseArgs()
+            {
+            }
+        }
+
+        public static MousePositionChangedHandler OnMousePositionChanged;
+
+        public delegate void MousePositionChangedHandler(object sender, MousePositionChangedArgs e);
+
+        public class MousePositionChangedArgs : EventArgs
+        {
+            public float ChangeX { get; private set; }
+            public float ChangeY { get; private set; }
+
+            public MousePositionChangedArgs(float changeX, float changeY)
+            {
+                ChangeX = changeX;
+                ChangeY = changeY;
+            }
+        }
+
 
         private static int _lastScrollWheelValue = 0;
 

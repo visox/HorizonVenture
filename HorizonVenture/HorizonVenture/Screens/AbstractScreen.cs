@@ -42,7 +42,16 @@ namespace HorizonVenture.HorizonVenture.Screens
         {
             foreach (Control c in _controls)
                 c.Update(gameTime);
+
+            UpdateCoursorPosition();
         }
+
+        protected void UpdateCoursorPosition()
+        {
+            _cursorPosition.X = InputManager.MouseState.X;
+            _cursorPosition.Y = InputManager.MouseState.Y;
+        }
+
         public virtual void Draw(SpriteBatch spriteBatch)
         {
             DrawBackgroundColor();
@@ -72,9 +81,6 @@ namespace HorizonVenture.HorizonVenture.Screens
         {
             if (_cursor != null)
             {
-                _cursorPosition.X = InputManager.MouseState.X;
-                _cursorPosition.Y = InputManager.MouseState.Y;
-
                 DrawCursorTexture(spriteBatch);
             }
         }

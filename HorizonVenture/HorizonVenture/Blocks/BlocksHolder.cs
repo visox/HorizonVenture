@@ -94,6 +94,16 @@ namespace HorizonVenture.HorizonVenture.Blocks
             return _center;
         }
 
+        public float GetWidth()
+        {
+            return _maxX - _minX;
+        }
+
+        public float GetHeight()
+        {
+            return _maxY - _minY;
+        }
+
         public void Draw(SpriteBatch spriteBatch, Vector2 position, Vector2 origin, float angle, Color color, float scale)
         {
 
