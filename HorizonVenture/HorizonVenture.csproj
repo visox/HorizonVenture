@@ -41,6 +41,7 @@
     <Compile Include="HorizonVenture\Blocks\Block.cs" />
     <Compile Include="HorizonVenture\Blocks\BlockDefinitions.cs" />
     <Compile Include="HorizonVenture\Blocks\BlocksHolder.cs" />
+    <Compile Include="HorizonVenture\Blocks\BlocksHolderPatterns\BitmapBlocksHolderPatternSupplier.cs" />
     <Compile Include="HorizonVenture\Blocks\BlocksHolderPatterns\BlocksHolderPatternSupplier.cs" />
     <Compile Include="HorizonVenture\Controls\Button.cs" />
     <Compile Include="HorizonVenture\Controls\Control.cs" />
@@ -117,6 +118,11 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\Particles\particle.xnb">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Content\Ships\ship1.xnb">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>

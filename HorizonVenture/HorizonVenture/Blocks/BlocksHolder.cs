@@ -43,16 +43,27 @@ namespace HorizonVenture.HorizonVenture.Blocks
                     _blocks.Add(v, blocksToAdd[v]);
                 }
 
-                if (v.X > _maxX)
-                    _maxX = (int)v.X;
+                if (v.X > _maxX)                
+                    _maxX = (int)v.X;                
                 if (v.X < _minX)
                     _minX = (int)v.X;
                 if (v.Y > _maxY)
                     _maxY = (int)v.Y;
                 if (v.Y < _minY)
                     _minY = (int)v.Y;
+
+               /* if (_maxX - _minX % 2 == 0)
+                    _maxX++;
+
+                if (_maxY - _minY % 2 == 0)
+                    _maxY++;*/
             }
 
+            if ((_maxX - _minX) % 2 == 0)
+                _maxX++;
+
+            if ((_maxY - _minY) % 2 == 0)
+                _maxY++;
 
             _allTextures =
                      new Texture2D(
@@ -88,8 +99,11 @@ namespace HorizonVenture.HorizonVenture.Blocks
 
         public Vector2 GetCenter()
         {
-            _center.X = ((_maxX - _minX + 1f) * SCALE_1_BLOCK_SIZE) /2;
-            _center.Y = ((_maxY - _minY + 1f) * SCALE_1_BLOCK_SIZE) /2;
+            _center.X = _maxX - _minX + 1;
+            _center.Y = _maxY - _minY + 1;
+            
+            _center.X *= SCALE_1_BLOCK_SIZE / 2;
+            _center.Y *= SCALE_1_BLOCK_SIZE / 2;
 
             return _center;
         }

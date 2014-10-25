@@ -14,9 +14,6 @@ namespace HorizonVenture.HorizonVenture.Blocks.BlocksHolderPatterns
 
             Dictionary<Vector2, AbstractBlock> blocks = new Dictionary<Vector2, AbstractBlock>();
 
-           //  blocks.Add(new Vector2(0, 0), new Block("metal1"));
-           //  blocks.Add(new Vector2(1, 0), new Block("metal1"));
-
             for (int y = -10; y <= 10; y++ )
             {
                 int xwide = 22 + y*2;
@@ -25,18 +22,6 @@ namespace HorizonVenture.HorizonVenture.Blocks.BlocksHolderPatterns
                     blocks.Add(new Vector2(x, y), new Block("metal1"));
                 }
             }
-         /*   blocks.Add(new Vector2(0, -2), new Block("metal1"));
-
-            blocks.Add(new Vector2(-1, -1), new Block("metal1"));
-            blocks.Add(new Vector2(0, -1), new Block("metal1"));
-            blocks.Add(new Vector2(1, -1), new Block("metal1"));
-
-            blocks.Add(new Vector2(-1, 0), new Block("metal1"));
-            blocks.Add(new Vector2(0, 0), new Block("metal1"));
-            blocks.Add(new Vector2(1, 0), new Block("metal1"));
-
-            blocks.Add(new Vector2(-1, 1), new Block("metal1"));
-            blocks.Add(new Vector2(1, 1), new Block("metal1"));*/
 
             result.addBlocks(blocks);
 

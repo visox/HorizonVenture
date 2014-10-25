@@ -19,8 +19,8 @@ namespace HorizonVenture.HorizonVenture.Space.SpaceEntities.Ships
         public PlayerShip(HorizonVentureSpace horizonVentureSpace, Vector2 spacePosition)
             : base(horizonVentureSpace, spacePosition)
         {
-            BlocksHolder = BlocksHolderPatternSupplier.getExampleShipPatter(horizonVentureSpace.getGame());
-
+            BlocksHolder = BitmapBlocksHolderPatternSupplier.getPatterShip1(horizonVentureSpace.getGame());
+             //   BlocksHolderPatternSupplier.getExampleShipPatter(horizonVentureSpace.getGame());
         //    EntityComponents.Add(new SimpleEngine(this, new Vector2(0,0)));
 
             OwnedComponents = new List<AbstractEntityComponent>();
@@ -75,12 +75,18 @@ namespace HorizonVenture.HorizonVenture.Space.SpaceEntities.Ships
             //   this._world.offSetWorldPosition(offset.X, offset.Y);
         }
 
+        private Vector2 _screenCenterOffSet = new Vector2();
+
         public void DetailShipDraw(SpriteBatch spriteBatch, Vector2 screenCenter, float scale)
         {
+            _screenCenterOffSet.X = ((screenCenter.X - (HorizonVentureSpace.getGame().GetScreenSize().X / 2)) / scale) +
+                ((HorizonVentureSpace.getGame().GetScreenSize().X / 2) / scale);
+            _screenCenterOffSet.Y = ((screenCenter.Y - (HorizonVentureSpace.getGame().GetScreenSize().Y / 2)) / scale) + 
+                ((HorizonVentureSpace.getGame().GetScreenSize().Y / 2) / scale);
 
             if (OnPreDrawSpaceEntity != null)
             {
-                OnPreDrawSpaceEntity(this, new DrawArgs(spriteBatch, screenCenter, scale));
+                OnPreDrawSpaceEntity(this, new DrawArgs(spriteBatch, _screenCenterOffSet, scale));
             }          
 
             this.BlocksHolder.Draw(spriteBatch, screenCenter,
@@ -88,7 +94,7 @@ namespace HorizonVenture.HorizonVenture.Space.SpaceEntities.Ships
 
             if (OnPostDrawSpaceEntity != null)
             {
-                OnPostDrawSpaceEntity(this, new DrawArgs(spriteBatch, screenCenter, scale));
+                OnPostDrawSpaceEntity(this, new DrawArgs(spriteBatch, _screenCenterOffSet, scale));
             }
         }
 

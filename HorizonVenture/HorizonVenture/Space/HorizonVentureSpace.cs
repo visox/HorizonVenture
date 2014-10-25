@@ -36,7 +36,7 @@ namespace HorizonVenture.HorizonVenture.Space
             _game = game;
 
             _spacePositionOffset = new Vector2();
-            _worldScale = 0.5f;
+            _worldScale = 0.25f;
 
             _entities = new List<AbstractSpaceEntity>();
 

@@ -112,8 +112,8 @@ namespace HorizonVenture.HorizonVenture.EntityComponents
             _drawPosition.X = Owner.SpacePosition.X * scale;
             _drawPosition.Y = Owner.SpacePosition.Y * scale;
 
-            _drawPosition.X += onShipPosition.X * scale * BlocksHolder.SCALE_1_BLOCK_SIZE;
-            _drawPosition.Y += onShipPosition.Y * scale * BlocksHolder.SCALE_1_BLOCK_SIZE;
+            _drawPosition.X += (onShipPosition.X) * scale * BlocksHolder.SCALE_1_BLOCK_SIZE;
+            _drawPosition.Y += (onShipPosition.Y) * scale * BlocksHolder.SCALE_1_BLOCK_SIZE;
 
             _drawPosition.X += spacePositionOffset.X * scale;
             _drawPosition.Y += spacePositionOffset.Y * scale;

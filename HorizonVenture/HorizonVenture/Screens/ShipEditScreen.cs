@@ -23,13 +23,17 @@ namespace HorizonVenture.HorizonVenture.Screens
 
         private Panel _rightShipComponentsPanel;
 
+        private float _scrollDelay;
+        private static readonly float SCROLL_DELAY = 100f;
+
         public ShipEditScreen(HorizonVentureGame game)
             : base(game)
         {
             _backgroundColor = Color.Black;
             _screenCenter = new Vector2((game.GetScreenSize().X - PANEL_WIDTH )/ 2, game.GetScreenSize().Y / 2);
             Scale = 1;
-            ComponentsPanelIndex = 0;            
+            ComponentsPanelIndex = 0;
+            _scrollDelay = 0;
         }
 
 
@@ -102,6 +106,11 @@ namespace HorizonVenture.HorizonVenture.Screens
 
         private void mouseScrollChanged(object sender, InputManager.MouseScrollChangeArgs e)
         {
+            if (_scrollDelay > 0)
+                return;
+
+            _scrollDelay = SCROLL_DELAY;
+
             if (e.Change < 0)
             {
                 if (Scale > 1.0f / 8.0f)
@@ -135,6 +144,16 @@ namespace HorizonVenture.HorizonVenture.Screens
                     {
                         _screenCenter.X = _game.GetScreenSize().X - PANEL_WIDTH;
                     }
+                    //////
+                    if ((((PlayerShip.BlocksHolder.GetHeight() * (BlocksHolder.SCALE_1_BLOCK_SIZE * Scale)) / 2) + _screenCenter.Y) < 0)
+                    {
+                        _screenCenter.Y = 0;
+                    }
+                    if ((-((PlayerShip.BlocksHolder.GetHeight() * (BlocksHolder.SCALE_1_BLOCK_SIZE * Scale)) / 2) + _screenCenter.Y) >
+                        _game.GetScreenSize().Y)
+                    {
+                        _screenCenter.Y = _game.GetScreenSize().Y;
+                    }
                 }
             }
         }
@@ -143,8 +162,8 @@ namespace HorizonVenture.HorizonVenture.Screens
 
         private Vector2 GetCursorPositionOnShip()
         {
-            _cursorPositionOnShip.X = InputManager.MouseState.X - _screenCenter.X;
-            _cursorPositionOnShip.Y = InputManager.MouseState.Y - _screenCenter.Y;
+            _cursorPositionOnShip.X = InputManager.MouseState.X - _screenCenter.X/* + (Blocks.BlocksHolder.SCALE_1_BLOCK_SIZE / 2)*/;
+            _cursorPositionOnShip.Y = InputManager.MouseState.Y - _screenCenter.Y/* + (Blocks.BlocksHolder.SCALE_1_BLOCK_SIZE / 2)*/;
 
             _cursorPositionOnShip.X /= Blocks.BlocksHolder.SCALE_1_BLOCK_SIZE * Scale;
             _cursorPositionOnShip.Y /= Blocks.BlocksHolder.SCALE_1_BLOCK_SIZE * Scale;
@@ -303,6 +322,14 @@ namespace HorizonVenture.HorizonVenture.Screens
             base.Update(gameTime);
 
             UpdateShip(gameTime);
+
+            UpdateScrollDelay(gameTime);
+        }
+
+        private void UpdateScrollDelay(GameTime gameTime)
+        {
+            if (_scrollDelay > 0)
+                _scrollDelay = Math.Max(0, _scrollDelay - gameTime.ElapsedGameTime.Milliseconds);
         }
 
         private void UpdateShip(GameTime gameTime)
