@@ -1,4 +1,4 @@
-﻿using HorizonVenture.HorizonVenture.Effects.ParticleEffects.ParticlesEmittor;
+﻿using HorizonVenture.HorizonVenture.Effects.ParticleEffects.ParticlesEmitter;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
@@ -10,7 +10,7 @@ namespace HorizonVenture.HorizonVenture.Effects.ParticleEffects.Particles
 {
     public class Particle
     {
-        public ParticlesEmmitor Owner { get; protected set; }
+        public ParticlesEmmitter Owner { get; protected set; }
 
         protected Vector2 _spacePosition;
         public Vector2 SpacePosition
@@ -22,7 +22,13 @@ namespace HorizonVenture.HorizonVenture.Effects.ParticleEffects.Particles
             }
         }
         public Texture2D Texture { get; set; }
-        public Color DrawColor { get; set; }
+
+        private Color _drawColor;
+        public Color DrawColor
+        {
+            get { return _drawColor; }
+            set { _drawColor = value; }
+        }
 
         private Vector2 _speed;
 
@@ -38,7 +44,7 @@ namespace HorizonVenture.HorizonVenture.Effects.ParticleEffects.Particles
         public Vector2 TextureDrawOrigin{ get; set; }
         public float Zoom { get; set; }
 
-        public Particle(ParticlesEmmitor owner, Vector2 position, Texture2D texture, float timeToLive)
+        public Particle(ParticlesEmmitter owner, Vector2 position, Texture2D texture, float timeToLive)
         {
             Owner = owner;
             SpacePosition = position;
@@ -52,6 +58,15 @@ namespace HorizonVenture.HorizonVenture.Effects.ParticleEffects.Particles
             Zoom = 1;
 
             TextureDrawOrigin = new Vector2(Texture.Width / 2, Texture.Height / 2);
+        }
+
+        public void SetDrawColor(byte a, byte b, byte g, byte r)
+        {
+            _drawColor.A = a;
+            _drawColor.B = b;
+            _drawColor.G = g;
+            _drawColor.R = r;
+            
         }
 
         public void SetSpeed(float x, float y)

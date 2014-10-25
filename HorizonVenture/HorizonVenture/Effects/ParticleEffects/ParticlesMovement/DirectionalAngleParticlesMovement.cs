@@ -1,5 +1,5 @@
 ﻿using HorizonVenture.HorizonVenture.Effects.ParticleEffects.Particles;
-using HorizonVenture.HorizonVenture.Effects.ParticleEffects.ParticlesEmittor;
+using HorizonVenture.HorizonVenture.Effects.ParticleEffects.ParticlesEmitter;
 using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;
@@ -10,7 +10,7 @@ namespace HorizonVenture.HorizonVenture.Effects.ParticleEffects.ParticlesMovemen
 {
     class DirectionalAngleParticlesMovement : IParticlesMovement
     {
-        public ParticlesEmmitor Owner { get; protected set; }
+        public ParticlesEmmitter Owner { get; protected set; }
         public float MinOffsetAngle { get; set; }
         public float MaxOffsetAngle { get; set; }
 
@@ -19,7 +19,7 @@ namespace HorizonVenture.HorizonVenture.Effects.ParticleEffects.ParticlesMovemen
 
         private Random _random;
 
-        public DirectionalAngleParticlesMovement(ParticlesEmmitor owner, float minOffsetAngle,
+        public DirectionalAngleParticlesMovement(ParticlesEmmitter owner, float minOffsetAngle,
         float maxOffsetAngle, float beginSpeedPerSecond, float endSpeedPerSecond)
         {
             Owner = owner;

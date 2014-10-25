@@ -1,4 +1,4 @@
-﻿using HorizonVenture.HorizonVenture.Effects.ParticleEffects.ParticlesEmittor;
+﻿using HorizonVenture.HorizonVenture.Effects.ParticleEffects.ParticlesEmitter;
 using HorizonVenture.HorizonVenture.Space;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -9,14 +9,14 @@ using System.Text;
 
 namespace HorizonVenture.HorizonVenture.Effects.ParticleEffects
 {
-    public class ParticleEffect : Effect
+    public class ParticleEffect : GameEffect
     {
-        protected List<ParticlesEmmitor> _emmitors;
+        protected List<ParticlesEmmitter> _emmitors;
 
         public ParticleEffect(Vector2 spacePosition, float angle, HorizonVentureSpace horizonVentureSpace)
             : base(spacePosition, angle, horizonVentureSpace)
         {
-            _emmitors = new List<ParticlesEmmitor>();
+            _emmitors = new List<ParticlesEmmitter>();
         }
 
 
@@ -27,7 +27,7 @@ namespace HorizonVenture.HorizonVenture.Effects.ParticleEffects
 
         }
 
-        public override void Draw(SpriteBatch spriteBatch, Vector2 spacePositionOffset, float scale)
+        protected override void Draw(SpriteBatch spriteBatch, Vector2 spacePositionOffset, float scale)
         {
             _emmitors.ForEach(e => e.Draw(spriteBatch, spacePositionOffset, scale));
         }

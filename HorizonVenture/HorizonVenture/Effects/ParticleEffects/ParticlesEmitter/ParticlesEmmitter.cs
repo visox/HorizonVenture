@@ -10,9 +10,9 @@ using HorizonVenture.HorizonVenture.Effects.ParticleEffects.Particles;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace HorizonVenture.HorizonVenture.Effects.ParticleEffects.ParticlesEmittor
+namespace HorizonVenture.HorizonVenture.Effects.ParticleEffects.ParticlesEmitter
 {
-    public abstract class ParticlesEmmitor
+    public abstract class ParticlesEmmitter
     {
         public IParticlesSource ParticlesSource { get; set; }
         public IParticlesGenerator ParticlesGenerator { get; set; }
@@ -23,7 +23,7 @@ namespace HorizonVenture.HorizonVenture.Effects.ParticleEffects.ParticlesEmittor
         public List<Particle> Particles { get; protected set; }
         public Vector2 OffsetOwner { get; set; }
 
-        public ParticlesEmmitor(ParticleEffect owner)
+        public ParticlesEmmitter(ParticleEffect owner)
         {
             Owner = owner;
             Particles = new List<Particle>();

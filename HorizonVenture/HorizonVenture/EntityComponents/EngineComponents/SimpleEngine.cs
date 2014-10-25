@@ -3,6 +3,7 @@ using HorizonVenture.HorizonVenture.Effects.ImpEffects;
 using HorizonVenture.HorizonVenture.Space.SpaceEntities;
 using HorizonVenture.HorizonVenture.Space.SpaceEntities.Ships;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,30 +14,29 @@ namespace HorizonVenture.HorizonVenture.EntityComponents.EngineComponents
     class SimpleEngine : AbstractEngine
     {
 
-        SimpleEngineEffect test;
-
+       
          public SimpleEngine(AbstractSpaceEntity owner, Vector2 positionOnEntity)
              :base(owner, positionOnEntity)
         {
-            test = new SimpleEngineEffect(owner.SpacePosition, 0, owner.HorizonVentureSpace);
+
         }
 
          public SimpleEngine(PlayerShip ps)
              :base(ps)
         {
-            test = new SimpleEngineEffect(Owner.SpacePosition, 0, Owner.HorizonVentureSpace);
+            
         }
 
-         public override void Draw(Microsoft.Xna.Framework.Graphics.SpriteBatch spriteBatch, Vector2 spacePositionOffset, float scale)
+         public override void OnShipInit()
          {
-             base.Draw(spriteBatch, spacePositionOffset, scale);
-             test.Draw(spriteBatch, spacePositionOffset, scale);
-         }
+             base.OnShipInit();
 
-         public override void Update(GameTime gameTime)
-         {
-             test.Update(gameTime);
-         } 
+             SimpleEngineEffect engineEffect = new SimpleEngineEffect(this, new Vector2(0, 3 * Blocks.BlocksHolder.SCALE_1_BLOCK_SIZE),
+                 Owner.SpacePosition, 0, Owner.HorizonVentureSpace);
+
+             Effects.Add(engineEffect);
+
+         }
 
         public override bool CanAdd(Vector2 position)
         {

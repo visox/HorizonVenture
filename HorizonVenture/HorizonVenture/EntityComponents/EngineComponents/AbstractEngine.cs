@@ -8,7 +8,7 @@ using System.Text;
 
 namespace HorizonVenture.HorizonVenture.EntityComponents.EngineComponents
 {
-    abstract class AbstractEngine : AbstractEntityComponent
+    public abstract class AbstractEngine : AbstractEntityComponent
     {
         public AbstractEngine(AbstractSpaceEntity owner, Vector2 positionOnEntity)
              :base(owner, positionOnEntity)

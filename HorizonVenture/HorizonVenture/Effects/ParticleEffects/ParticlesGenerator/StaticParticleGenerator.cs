@@ -1,5 +1,5 @@
 ﻿using HorizonVenture.HorizonVenture.Effects.ParticleEffects.Particles;
-using HorizonVenture.HorizonVenture.Effects.ParticleEffects.ParticlesEmittor;
+using HorizonVenture.HorizonVenture.Effects.ParticleEffects.ParticlesEmitter;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
@@ -11,7 +11,7 @@ namespace HorizonVenture.HorizonVenture.Effects.ParticleEffects.ParticlesGenerat
 {
     class StaticParticleGenerator: IParticlesGenerator
     {
-        public ParticlesEmmitor Owner { get; protected set; }
+        public ParticlesEmmitter Owner { get; protected set; }
         public Texture2D ParticleTexture { get; set; }
         public Color ParticleDrawColor { get; set; }
         public float ParticleMaxTimeToLive { get; set; }
@@ -28,7 +28,7 @@ namespace HorizonVenture.HorizonVenture.Effects.ParticleEffects.ParticlesGenerat
 
         private Random _random;
 
-        public StaticParticleGenerator(ParticlesEmmitor owner, Texture2D particleTexture,
+        public StaticParticleGenerator(ParticlesEmmitter owner, Texture2D particleTexture,
             int minParticlesCountPerSecond, int maxParticlesCountPerSecond)
         {
             Owner = owner;
@@ -55,7 +55,7 @@ namespace HorizonVenture.HorizonVenture.Effects.ParticleEffects.ParticlesGenerat
             while (_particlesReleased < shouldBeReleased)
             {
                 Particle toAdd = new Particle(Owner, new Vector2(0, 0), ParticleTexture,
-                    ParticleMinTimeToLive + ((ParticleMaxTimeToLive - ParticleMinTimeToLive) * (float)_random.NextDouble()));
+                    _random.Next(ParticleMinTimeToLive, ParticleMaxTimeToLive));
 
                 result.Add(toAdd);
 

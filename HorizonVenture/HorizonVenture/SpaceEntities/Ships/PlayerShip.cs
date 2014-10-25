@@ -1,4 +1,5 @@
 ﻿using HorizonVenture.HorizonVenture.Blocks.BlocksHolderPatterns;
+using HorizonVenture.HorizonVenture.Draw;
 using HorizonVenture.HorizonVenture.EntityComponents;
 using HorizonVenture.HorizonVenture.EntityComponents.EngineComponents;
 using Microsoft.Xna.Framework;
@@ -76,10 +77,19 @@ namespace HorizonVenture.HorizonVenture.Space.SpaceEntities.Ships
 
         public void DetailShipDraw(SpriteBatch spriteBatch, Vector2 screenCenter, float scale)
         {
+
+            if (OnPreDrawSpaceEntity != null)
+            {
+                OnPreDrawSpaceEntity(this, new DrawArgs(spriteBatch, screenCenter, scale));
+            }          
+
             this.BlocksHolder.Draw(spriteBatch, screenCenter,
                 this.BlocksHolder.GetCenter(), 0, _color, scale);
 
-            DrawEntityComponents(spriteBatch, screenCenter, scale);
+            if (OnPostDrawSpaceEntity != null)
+            {
+                OnPostDrawSpaceEntity(this, new DrawArgs(spriteBatch, screenCenter, scale));
+            }
         }
 
     }

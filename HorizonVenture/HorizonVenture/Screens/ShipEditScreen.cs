@@ -193,6 +193,7 @@ namespace HorizonVenture.HorizonVenture.Screens
                 aec.PositionOnEntity = toAddPosition;
 
                 PlayerShip.EntityComponents.Add(aec);
+                aec.OnShipInit();
                 PlayerShip.OwnedComponents.Remove(aec);
 
                 AddRightShipComponentsPanel();
@@ -295,6 +296,18 @@ namespace HorizonVenture.HorizonVenture.Screens
 
             InputManager.OnMouseLeftKeyRelease -= _wasMouseLeftKeyReleased;
             InputManager.OnMousePositionChanged -= mousePositionChanged;
+        }
+
+        public override void Update(GameTime gameTime)
+        {
+            base.Update(gameTime);
+
+            UpdateShip(gameTime);
+        }
+
+        private void UpdateShip(GameTime gameTime)
+        {
+            PlayerShip.Update(gameTime);
         }
 
         public override void Draw(SpriteBatch spriteBatch)

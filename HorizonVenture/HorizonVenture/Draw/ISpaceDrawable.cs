@@ -11,4 +11,6 @@ namespace HorizonVenture.HorizonVenture.Draw
     {
         void Draw(SpriteBatch spriteBatch, Vector2 spacePositionOffset, float scale);
     }
+
+
 }

@@ -8,13 +8,13 @@ using System.Text;
 
 namespace HorizonVenture.HorizonVenture.Effects
 {
-    public abstract class Effect
+    public abstract class GameEffect
     {
         public Vector2 SpacePosition { get; set; }
         public float Angle { get; set; }
         public HorizonVentureSpace HorizonVentureSpace { get; set; }
 
-        protected Effect(Vector2 spacePosition, float angle, HorizonVentureSpace horizonVentureSpace)
+        protected GameEffect(Vector2 spacePosition, float angle, HorizonVentureSpace horizonVentureSpace)
         {
             SpacePosition = spacePosition;
             Angle = angle;
@@ -24,6 +24,6 @@ namespace HorizonVenture.HorizonVenture.Effects
 
         public abstract void Update(GameTime gameTime);
 
-        public abstract void Draw(SpriteBatch spriteBatch, Vector2 spacePositionOffset, float scale);
+        protected abstract void Draw(SpriteBatch spriteBatch, Vector2 spacePositionOffset, float scale);
     }
 }
