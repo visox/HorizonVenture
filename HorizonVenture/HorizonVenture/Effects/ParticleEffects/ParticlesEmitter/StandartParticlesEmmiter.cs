@@ -13,7 +13,7 @@ namespace HorizonVenture.HorizonVenture.Effects.ParticleEffects
     {
 
         public StandartParticlesEmmitter(ParticleEffect owner)
-            :base(owner)
+            : base(owner)
         {
 
         }

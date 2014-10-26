@@ -14,9 +14,10 @@ namespace HorizonVenture.HorizonVenture.EntityComponents.EngineComponents
     class SimpleEngine : AbstractEngine
     {
 
-       
+        private static readonly float POWER = 500;
+
          public SimpleEngine(AbstractSpaceEntity owner, Vector2 positionOnEntity)
-             :base(owner, positionOnEntity)
+            : base(owner, positionOnEntity)
         {
 
         }
@@ -27,11 +28,18 @@ namespace HorizonVenture.HorizonVenture.EntityComponents.EngineComponents
             
         }
 
+         public override float GetCurrentPower()
+         {
+             return POWER;
+         }
+
          public override void OnShipInit()
          {
              base.OnShipInit();
 
-             SimpleEngineEffect engineEffect = new SimpleEngineEffect(this, new Vector2(0, 3 * Blocks.BlocksHolder.SCALE_1_BLOCK_SIZE),
+             SimpleEngineEffect engineEffect = new SimpleEngineEffect(this, 
+                 new Vector2(0,
+                     (3 * Blocks.BlocksHolder.SCALE_1_BLOCK_SIZE)),
                  Owner.SpacePosition, 0, Owner.HorizonVentureSpace);
 
              Effects.Add(engineEffect);

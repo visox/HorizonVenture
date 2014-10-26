@@ -62,6 +62,8 @@
     <Compile Include="HorizonVenture\Effects\ParticleEffects\PartilesAppearance\IParticlesAppearance.cs" />
     <Compile Include="HorizonVenture\Effects\ParticleEffects\ParticlesEmitter\StandartParticlesEmmiter.cs" />
     <Compile Include="HorizonVenture\Effects\ParticleEffects\PartilesAppearance\LinearChangeParticleAppearance.cs" />
+    <Compile Include="HorizonVenture\EntityBehavior\AbstractBehavior.cs" />
+    <Compile Include="HorizonVenture\EntityBehavior\PlayerShipBehavior\PlayerShipBehavior.cs" />
     <Compile Include="HorizonVenture\EntityComponents\EngineComponents\AbstractEngine.cs" />
     <Compile Include="HorizonVenture\EntityComponents\EngineComponents\SimpleEngine.cs" />
     <Compile Include="HorizonVenture\Helper.cs" />
@@ -70,6 +72,9 @@
     <Compile Include="HorizonVenture\Screens\MainMenuScreen.cs" />
     <Compile Include="HorizonVenture\EntityComponents\AbstractEntityComponent.cs" />
     <Compile Include="HorizonVenture\Screens\ShipEditScreen.cs" />
+    <Compile Include="HorizonVenture\SpaceEntities\Ships\AIShips\AbstractAIShip.cs" />
+    <Compile Include="HorizonVenture\SpaceEntities\Ships\AIShips\ComplexShips\AbstractComplexAIShip.cs" />
+    <Compile Include="HorizonVenture\SpaceEntities\Ships\AIShips\ComplexShips\BasicComplexAIShip.cs" />
     <Compile Include="HorizonVenture\Space\HorizonVentureSpace.cs" />
     <Compile Include="HorizonVenture\SpaceEntities\AbstractSpaceEntity.cs" />
     <Compile Include="HorizonVenture\SpaceEntities\Ships\AbstractShip.cs" />
@@ -125,6 +130,9 @@
     <Content Include="Content\Ships\ship1.xnb">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="HorizonVenture\SpaceEntities\Ships\AIShips\Missiles\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -15,9 +15,9 @@ namespace HorizonVenture
         Vector2 _baseScreenSize = new Vector2(1280, 680);
         public PlayerShip PlayerShip { get; private set;}
 
-        MainMenuScreen _mainMenuScreen;
-        InSpaceScreen _inSpaceScreen;
-        ShipEditScreen _shipEditScreen;
+        public MainMenuScreen MainMenuScreen { get; private set; }
+        public InSpaceScreen InSpaceScreen { get; private set; }
+        public ShipEditScreen ShipEditScreen { get; private set; }
 
         HorizonVentureSpace _horizonVentureSpace;
         
@@ -52,12 +52,12 @@ namespace HorizonVenture
         {
             _spriteBatch = new SpriteBatch(GraphicsDevice);
 
-            _mainMenuScreen = new MainMenuScreen(this);
-            _mainMenuScreen.Show();
+            MainMenuScreen = new MainMenuScreen(this);
+            MainMenuScreen.Show();
 
-            _inSpaceScreen = new InSpaceScreen(this);
+            InSpaceScreen = new InSpaceScreen(this);
 
-            _shipEditScreen = new ShipEditScreen(this);
+            ShipEditScreen = new ShipEditScreen(this);
 
 
             _horizonVentureSpace = new HorizonVentureSpace(this, PlayerShip);
@@ -108,8 +108,8 @@ namespace HorizonVenture
 
         public void ShowShipEditScreen()
         {
-            _shipEditScreen.Show();
-            _shipEditScreen.PlayerShip = PlayerShip;
+            ShipEditScreen.Show();
+            ShipEditScreen.PlayerShip = PlayerShip;
         }
 
 
@@ -117,8 +117,8 @@ namespace HorizonVenture
         {
             
             _horizonVentureSpace.PlayerShip = PlayerShip;
-            _inSpaceScreen.HorizonVentureSpace = _horizonVentureSpace;
-            _inSpaceScreen.Show();
+            InSpaceScreen.HorizonVentureSpace = _horizonVentureSpace;
+            InSpaceScreen.Show();
         }
 
         public void QuitGame()

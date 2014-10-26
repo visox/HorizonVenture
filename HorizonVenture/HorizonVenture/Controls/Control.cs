@@ -7,7 +7,7 @@ using System.Text;
 
 namespace HorizonVenture.HorizonVenture.Controls
 {
-    abstract class Control
+    public abstract class Control
     {
         public Rectangle Position { get; set; }
 

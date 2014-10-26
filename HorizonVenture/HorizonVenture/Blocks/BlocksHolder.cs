@@ -52,11 +52,6 @@ namespace HorizonVenture.HorizonVenture.Blocks
                 if (v.Y < _minY)
                     _minY = (int)v.Y;
 
-               /* if (_maxX - _minX % 2 == 0)
-                    _maxX++;
-
-                if (_maxY - _minY % 2 == 0)
-                    _maxY++;*/
             }
 
             if ((_maxX - _minX) % 2 == 0)
@@ -95,6 +90,11 @@ namespace HorizonVenture.HorizonVenture.Blocks
 
         }
 
+        public int GetBlocksCount()
+        {
+            return _blocks.Count;
+        }
+
         private Vector2 _center = new Vector2();
 
         public Vector2 GetCenter()
@@ -121,7 +121,7 @@ namespace HorizonVenture.HorizonVenture.Blocks
         public void Draw(SpriteBatch spriteBatch, Vector2 position, Vector2 origin, float angle, Color color, float scale)
         {
 
-            spriteBatch.Draw(_allTextures, position, null, color, angle, origin,
+            spriteBatch.Draw(_allTextures, position, null, color, MathHelper.ToRadians(angle), origin,
                scale, SpriteEffects.None, 0);
 
         }

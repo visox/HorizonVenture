@@ -8,7 +8,7 @@ using System.Text;
 
 namespace HorizonVenture.HorizonVenture.Screens
 {
-    abstract class AbstractScreen
+    public abstract class AbstractScreen
     {
         protected HorizonVentureGame _game;
         protected Color _backgroundColor = Color.Black;
@@ -18,17 +18,55 @@ namespace HorizonVenture.HorizonVenture.Screens
 
         protected List<Control> _controls;
 
+        public delegate void InitHandler(object sender, EventArgs e);
+        public delegate void UnInitHandler(object sender, EventArgs e);
+
+        public InitHandler OnInit;
+        public UnInitHandler OnUnInit;
+
+        public Boolean IsActive { get; private set; }
+
         protected AbstractScreen(HorizonVentureGame game)
         {
             _game = game;
             _controls = new List<Control>();
+            IsActive = false;
         }
 
         public void Show()
         {
-            Init();
-            CurrentScreen = this;
+            if (CurrentScreen != null && CurrentScreen.Equals(this))
+                return;
+
+            if (CurrentScreen != null)
+                CurrentScreen.RunUnInit();
             
+            RunInit();           
+
+            CurrentScreen = this;
+
+        }
+
+        private void RunInit()
+        {
+            IsActive = true;
+            Init();
+
+            if (OnInit != null)
+                OnInit(this, new EventArgs());
+
+            
+        }
+
+        private void RunUnInit()
+        {
+            
+
+            IsActive = false;
+            UnInit();
+
+            if (OnUnInit != null)
+                OnUnInit(this, new EventArgs());
         }
 
         protected abstract void Init();

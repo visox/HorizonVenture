@@ -9,6 +9,7 @@ using HorizonVenture.HorizonVenture.Effects.ParticleEffects.PartilesAppearance;
 using HorizonVenture.HorizonVenture.Effects.ParticleEffects.Particles;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using HorizonVenture.HorizonVenture.EntityComponents;
 
 namespace HorizonVenture.HorizonVenture.Effects.ParticleEffects.ParticlesEmitter
 {
@@ -21,14 +22,25 @@ namespace HorizonVenture.HorizonVenture.Effects.ParticleEffects.ParticlesEmitter
 
         public ParticleEffect Owner { get; protected set; }
         public List<Particle> Particles { get; protected set; }
-        public Vector2 OffsetOwner { get; set; }
+        public Vector2 SpacePosition { get; set; }
 
         public ParticlesEmmitter(ParticleEffect owner)
         {
             Owner = owner;
             Particles = new List<Particle>();
 
-            OffsetOwner = new Vector2(0, 0);
+            SpacePosition = Owner.SpacePosition;
+        }
+
+        public void AdjustSpacePosition(AbstractEntityComponent aec, Vector2 offset, float angle)
+        {
+            SpacePosition = new Vector2(aec.GetRealZeroAngleSpacePosition().X + offset.X,
+                aec.GetRealZeroAngleSpacePosition().Y + offset.Y);
+
+            if (angle != 0)
+            {
+                SpacePosition = Helper.RotateAroundOrigin(SpacePosition, aec.Owner.SpacePosition, angle);
+            }
         }
 
 

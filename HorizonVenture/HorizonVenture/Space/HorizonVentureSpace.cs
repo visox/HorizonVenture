@@ -1,6 +1,7 @@
 ﻿using HorizonVenture.HorizonVenture.Blocks;
 using HorizonVenture.HorizonVenture.Space.SpaceEntities;
 using HorizonVenture.HorizonVenture.Space.SpaceEntities.Ships;
+using HorizonVenture.HorizonVenture.SpaceEntities.Ships.AIShips.ComplexShips;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
@@ -39,9 +40,11 @@ namespace HorizonVenture.HorizonVenture.Space
             _worldScale = 0.25f;
 
             _entities = new List<AbstractSpaceEntity>();
-
-        //    playerShip = new PlayerShip(this, new Vector2(0, 0));
             _entities.Add(playerShip);
+
+
+            _entities.Add(new BasicComplexAIShip(this, new Vector2(-1200,-1200)));
+            
             
         }
 

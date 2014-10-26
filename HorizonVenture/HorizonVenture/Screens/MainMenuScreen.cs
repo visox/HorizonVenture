@@ -9,7 +9,7 @@ using Microsoft.Xna.Framework.Input;
 
 namespace HorizonVenture.HorizonVenture.Screens
 {
-    class MainMenuScreen : AbstractScreen
+    public class MainMenuScreen : AbstractScreen
     {
 
         private static readonly int BUTTON_WIDTH = 300;

@@ -10,7 +10,7 @@ using System.Text;
 
 namespace HorizonVenture.HorizonVenture.Screens
 {
-    class InSpaceScreen : AbstractScreen
+    public class InSpaceScreen : AbstractScreen
     {
 
         public HorizonVentureSpace HorizonVentureSpace { get; set; }

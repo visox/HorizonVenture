@@ -10,10 +10,10 @@ namespace HorizonVenture.HorizonVenture.EntityComponents.EngineComponents
 {
     public abstract class AbstractEngine : AbstractEntityComponent
     {
+
         public AbstractEngine(AbstractSpaceEntity owner, Vector2 positionOnEntity)
              :base(owner, positionOnEntity)
         {
-
         }
 
         public AbstractEngine(PlayerShip ps)
@@ -27,6 +27,11 @@ namespace HorizonVenture.HorizonVenture.EntityComponents.EngineComponents
             throw new NotImplementedException("not implemented IsPositionOnBack");
         }
 
+        public abstract float GetCurrentPower();
 
+        public static float GetSumEnginePower(List<AbstractEngine> engines)
+        {
+            return engines.Sum(e => e.GetCurrentPower());
+        }
     }
 }

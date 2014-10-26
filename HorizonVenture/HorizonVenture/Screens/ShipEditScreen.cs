@@ -12,7 +12,7 @@ using System.Text;
 
 namespace HorizonVenture.HorizonVenture.Screens
 {
-    class ShipEditScreen : AbstractScreen
+    public class ShipEditScreen : AbstractScreen
     {
         public PlayerShip PlayerShip { get; set; }
 

@@ -19,15 +19,9 @@ namespace HorizonVenture.HorizonVenture.Effects.ParticleEffects.ParticlesMovemen
 
         private Random _random;
 
-        public DirectionalAngleParticlesMovement(ParticlesEmmitter owner, float minOffsetAngle,
-        float maxOffsetAngle, float beginSpeedPerSecond, float endSpeedPerSecond)
+        public DirectionalAngleParticlesMovement(ParticlesEmmitter owner)
         {
             Owner = owner;
-            MinOffsetAngle = minOffsetAngle;
-            MaxOffsetAngle = maxOffsetAngle;
-            BeginSpeedPerSecond = beginSpeedPerSecond;
-            EndSpeedPerSecond = endSpeedPerSecond;
-
             _random = new Random();
         }
 
@@ -37,7 +31,7 @@ namespace HorizonVenture.HorizonVenture.Effects.ParticleEffects.ParticlesMovemen
             {
                 float angle = _random.Next((int)MinOffsetAngle, (int)MaxOffsetAngle) + Owner.Owner.Angle;
 
-                particle.Speed = Helper.AngleToVector(MathHelper.ToRadians(angle));                 
+                particle.Speed = Helper.AngleToVector(angle);                 
             }
 
             particle.NormalizeSpeed();

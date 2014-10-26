@@ -106,6 +106,20 @@ namespace HorizonVenture.HorizonVenture.EntityComponents
             }
         }
 
+        private Vector2 _realSpacePosition = new Vector2();
+
+        public Vector2 GetRealZeroAngleSpacePosition()
+        {
+            _realSpacePosition.X = Owner.SpacePosition.X;
+            _realSpacePosition.Y = Owner.SpacePosition.Y;
+
+            _realSpacePosition.X += (PositionOnEntity.X) * BlocksHolder.SCALE_1_BLOCK_SIZE;
+            _realSpacePosition.Y += (PositionOnEntity.Y) * BlocksHolder.SCALE_1_BLOCK_SIZE;
+
+           // _realSpacePosition = Helper.RotateAroundOrigin(_realSpacePosition, Owner.SpacePosition, Owner.Angle);
+
+            return _realSpacePosition;
+        }
 
         protected Vector2 GetDrawPosition(Vector2 spacePositionOffset, float scale, Vector2 onShipPosition)
         {
@@ -114,6 +128,8 @@ namespace HorizonVenture.HorizonVenture.EntityComponents
 
             _drawPosition.X += (onShipPosition.X) * scale * BlocksHolder.SCALE_1_BLOCK_SIZE;
             _drawPosition.Y += (onShipPosition.Y) * scale * BlocksHolder.SCALE_1_BLOCK_SIZE;
+
+            _drawPosition = Helper.RotateAroundOrigin(_drawPosition, Owner.SpacePosition, Owner.Angle);
 
             _drawPosition.X += spacePositionOffset.X * scale;
             _drawPosition.Y += spacePositionOffset.Y * scale;

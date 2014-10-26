@@ -14,6 +14,8 @@ namespace HorizonVenture.HorizonVenture.Effects.ParticleEffects.ParticlesSource
         public Vector2 Begin { get; set; }
         public Vector2 End { get; set; }
 
+        public float Angle { get; set; }
+
         private Random _random;
 
         public LineParticleSource(ParticlesEmmitter owner, Vector2 begin, Vector2 end)
@@ -30,8 +32,6 @@ namespace HorizonVenture.HorizonVenture.Effects.ParticleEffects.ParticlesSource
 
         public void SetNewParticlePosition(Particle particle)
         {
-
-
             float posx = _random.Next(_actualBegin.X, _actualEnd.X);
             float posy = _random.Next(_actualBegin.Y, _actualEnd.Y);
 
@@ -40,11 +40,14 @@ namespace HorizonVenture.HorizonVenture.Effects.ParticleEffects.ParticlesSource
 
         public void Update(GameTime gameTime)
         {
-            _actualBegin.X = Begin.X + Owner.OffsetOwner.X + Owner.Owner.SpacePosition.X;
-            _actualEnd.X = End.X + Owner.OffsetOwner.X + Owner.Owner.SpacePosition.X;
+            _actualBegin.X = Begin.X + Owner.SpacePosition.X;
+            _actualEnd.X = End.X + Owner.SpacePosition.X;            
 
-            _actualBegin.Y = Begin.Y + Owner.OffsetOwner.Y + Owner.Owner.SpacePosition.Y;
-            _actualEnd.Y = End.Y + Owner.OffsetOwner.Y + Owner.Owner.SpacePosition.Y;
+            _actualBegin.Y = Begin.Y + Owner.SpacePosition.Y;
+            _actualEnd.Y = End.Y + Owner.SpacePosition.Y;
+
+            _actualBegin = Helper.RotateAroundOrigin(_actualBegin, Owner.SpacePosition, Angle);
+            _actualEnd = Helper.RotateAroundOrigin(_actualEnd, Owner.SpacePosition, Angle);
         }
     }
 }

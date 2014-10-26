@@ -1,5 +1,6 @@
 ﻿using HorizonVenture.HorizonVenture.Blocks.BlocksHolderPatterns;
 using HorizonVenture.HorizonVenture.Draw;
+using HorizonVenture.HorizonVenture.EntityBehavior.PlayerShipBehavior;
 using HorizonVenture.HorizonVenture.EntityComponents;
 using HorizonVenture.HorizonVenture.EntityComponents.EngineComponents;
 using Microsoft.Xna.Framework;
@@ -23,10 +24,15 @@ namespace HorizonVenture.HorizonVenture.Space.SpaceEntities.Ships
              //   BlocksHolderPatternSupplier.getExampleShipPatter(horizonVentureSpace.getGame());
         //    EntityComponents.Add(new SimpleEngine(this, new Vector2(0,0)));
 
+            EntityComponents.Add(new SimpleEngine(this, new Vector2(-6, 22)));
+            EntityComponents.Add(new SimpleEngine(this, new Vector2(7, 22)));
+
             OwnedComponents = new List<AbstractEntityComponent>();
             OwnedComponents.Add(new SimpleEngine(this));
             OwnedComponents.Add(new SimpleEngine(this));
             OwnedComponents.Add(new SimpleEngine(this));
+
+            Behavior = new PlayerShipBehavior(this);
         }
 
 
