@@ -16,7 +16,7 @@ namespace HorizonVenture.HorizonVenture.EntityBehavior.PlayerShipBehavior
         public PlayerShipBehavior(PlayerShip owner)
             :base(owner)
         {
-            InputManager.OnMouseLeftKeyPress += MouseLeftKeyPress;
+        //    InputManager.OnMouseLeftKeyPress += MouseLeftKeyPress;
 
             _isActive = Owner.HorizonVentureSpace.getGame().InSpaceScreen.IsActive;
 
@@ -33,18 +33,22 @@ namespace HorizonVenture.HorizonVenture.EntityBehavior.PlayerShipBehavior
 
         
 
-        private void MouseLeftKeyPress(object sender, InputManager.MouseKeyPressArgs e)
+        private void HandleMouseInputMovement()
         {
+
+
             if (!_isActive)
                 return;
+
+            if (InputManager.MouseState.LeftButton != Microsoft.Xna.Framework.Input.ButtonState.Pressed)
+                return;
+
 
             Vector2 toPos = Helper.GetScreenPosToSpacePosition(InputManager.MouseState.X,
                 InputManager.MouseState.Y, Owner.HorizonVentureSpace);
 
-            Owner.TurnToSpacePosition(toPos);
-          
-
-
+            Owner.GoToSpacePosition(toPos);
+           // Owner.TurnToSpacePosition(toPos);
         }
 
 
@@ -54,6 +58,7 @@ namespace HorizonVenture.HorizonVenture.EntityBehavior.PlayerShipBehavior
         protected override void Update(GameTime gameTime)
         {
             base.Update(gameTime);
+            HandleMouseInputMovement();
         }
 
         

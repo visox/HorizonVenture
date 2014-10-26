@@ -42,11 +42,13 @@ namespace HorizonVenture
            
             _graphics.PreferredBackBufferWidth = (int)_baseScreenSize.X;
             _graphics.PreferredBackBufferHeight = (int)_baseScreenSize.Y;
+
             _graphics.ApplyChanges();
 
             IsMouseVisible = true;
             base.Initialize();
         }
+
 
         protected override void LoadContent()
         {
@@ -79,6 +81,11 @@ namespace HorizonVenture
 
         protected override void Draw(GameTime gameTime)
         {
+
+
+           // _spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, SamplerState.LinearClamp,
+          //      DepthStencilState.Default, RasterizerState.CullCounterClockwise, null, Matrix.CreateScale(0.0625f, 0.0625f, 1.0f));
+
             _spriteBatch.Begin();
             AbstractScreen.CurrentScreen.Draw(_spriteBatch);
 

@@ -15,6 +15,13 @@ namespace HorizonVenture.HorizonVenture.Space
     {
         Vector2 _spacePositionOffset;
         float _worldScale;
+
+        public float WorldScale
+        {
+            get { return _worldScale; }
+            private set { _worldScale = value; }
+        }
+
         HorizonVentureGame _game;
 
         private PlayerShip _playerShip;
@@ -37,7 +44,7 @@ namespace HorizonVenture.HorizonVenture.Space
             _game = game;
 
             _spacePositionOffset = new Vector2();
-            _worldScale = 0.25f;
+            _worldScale = 0.0625f;
 
             _entities = new List<AbstractSpaceEntity>();
             _entities.Add(playerShip);

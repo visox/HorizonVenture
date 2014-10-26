@@ -17,7 +17,11 @@ namespace HorizonVenture.HorizonVenture
 
         public static float VectorToAngle(Vector2 vector)
         {
-            return MathHelper.ToDegrees((float)Math.Atan2(vector.X, -vector.Y));
+            float result = MathHelper.ToDegrees((float)Math.Atan2(vector.X, -vector.Y));
+            if (result < 0)
+                result += 360;
+
+            return result;
         }
 
         private static Vector2 _vectorFromMiddle = new Vector2();
@@ -28,19 +32,24 @@ namespace HorizonVenture.HorizonVenture
 
             return _vectorFromMiddle;
         }
-
+        private static Vector2 _vectorSpacePosition = new Vector2();
         public static Vector2 GetScreenPosToSpacePosition(int toX, int toY, HorizonVentureSpace space)
         {
-            _vectorFromMiddle.X = toX - (space.getGame().GetScreenSize().X / 2) + (space.PlayerShip.SpacePosition.X);
-            _vectorFromMiddle.Y = toY - (space.getGame().GetScreenSize().Y / 2) + (space.PlayerShip.SpacePosition.Y);
+            _vectorSpacePosition.X = ((toX - (space.getGame().GetScreenSize().X / 2)) / space.WorldScale) + space.PlayerShip.SpacePosition.X;
+            _vectorSpacePosition.Y = ((toY - (space.getGame().GetScreenSize().Y / 2)) / space.WorldScale) + space.PlayerShip.SpacePosition.Y;
 
-            return _vectorFromMiddle;
+            return _vectorSpacePosition;
         }
 
 
-        public static float GetAngleSpeed(float power, float weight)
+        public static float GetAngleSpeedAcceleration(float power, float weight)
         {
-            return (power * 100) / weight;
+            return (power * 200) / weight;
+        }
+
+        public static float GetVectorSpeed(float power, float weight)
+        {
+            return (power * 5000) / weight;
         }
 
         public static Vector2 RotateAroundOrigin(Vector2 point, Vector2 origin, float angle)
