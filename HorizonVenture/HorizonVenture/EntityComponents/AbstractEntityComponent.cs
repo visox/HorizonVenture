@@ -24,6 +24,9 @@ namespace HorizonVenture.HorizonVenture.EntityComponents
         public DrawHandler OnPreDrawComponent;
         public DrawHandler OnPostDrawComponent;
 
+        public DrawHandler OnPreDrawEditorComponent;
+        public DrawHandler OnPostDrawEditorComponent;
+
         public UpdateHandler OnPreUpdateSpaceComponent;
         public UpdateHandler OnPostUpdateSpaceComponent;
 
@@ -56,6 +59,18 @@ namespace HorizonVenture.HorizonVenture.EntityComponents
             Angle = 0;
             Owner.OnPostDrawSpaceEntity += PostDrawOwner;
             Owner.OnPostUpdateSpaceEntity += PostUpdateOwner;
+
+            if (Owner is PlayerShip)
+            {
+                PlayerShip ps = (PlayerShip)Owner;
+
+                ps.OnPostDrawEditorSpaceEntity += PostDrawEditorOwner;
+            }
+        }
+
+        private void PostDrawEditorOwner(object sender, DrawArgs e)
+        {
+            DrawEditor(e.SpriteBatch, e.SpacePositionOffset, e.Scale);
         }
 
         private void PostUpdateOwner(object sender, UpdateArgs e)
@@ -106,6 +121,23 @@ namespace HorizonVenture.HorizonVenture.EntityComponents
             }
         }
 
+        protected virtual void DrawEditor(SpriteBatch spriteBatch, Vector2 spacePositionOffset, float scale)
+        {
+
+
+            if (OnPreDrawEditorComponent != null)
+            {
+                OnPreDrawEditorComponent(this, new DrawArgs(spriteBatch, spacePositionOffset, scale));
+            }
+
+            InnerDraw(spriteBatch, spacePositionOffset, PositionOnEntity, scale, true);
+
+            if (OnPostDrawEditorComponent != null)
+            {
+                OnPostDrawEditorComponent(this, new DrawArgs(spriteBatch, spacePositionOffset, scale));
+            }
+        }
+
         private Vector2 _realSpacePosition = new Vector2();
 
         public Vector2 GetRealZeroAngleSpacePosition()
@@ -121,15 +153,26 @@ namespace HorizonVenture.HorizonVenture.EntityComponents
             return _realSpacePosition;
         }
 
-        protected Vector2 GetDrawPosition(Vector2 spacePositionOffset, float scale, Vector2 onShipPosition)
+        protected Vector2 GetDrawPosition(Vector2 spacePositionOffset, float scale, Vector2 onShipPosition, bool isEditorMode = false)
         {
-            _drawPosition.X = Owner.SpacePosition.X;
-            _drawPosition.Y = Owner.SpacePosition.Y;
+            _drawPosition.X = 0;
+            _drawPosition.Y = 0;
+
+            if (!isEditorMode)
+            {
+                _drawPosition.X = Owner.SpacePosition.X;
+                _drawPosition.Y = Owner.SpacePosition.Y;
+            }
 
             _drawPosition.X += (onShipPosition.X) * BlocksHolder.SCALE_1_BLOCK_SIZE;
             _drawPosition.Y += (onShipPosition.Y) * BlocksHolder.SCALE_1_BLOCK_SIZE;
 
-            _drawPosition = Helper.RotateAroundOrigin(_drawPosition, Owner.SpacePosition, Owner.Angle);
+            float actualAngle = Owner.Angle;
+
+            if (isEditorMode)
+                actualAngle = 0;
+
+            _drawPosition = Helper.RotateAroundOrigin(_drawPosition, Owner.SpacePosition, actualAngle);
 
             _drawPosition.X *= scale;
             _drawPosition.Y *= scale;
@@ -156,10 +199,16 @@ namespace HorizonVenture.HorizonVenture.EntityComponents
             }
         }
 
-        protected virtual void InnerDraw(SpriteBatch spriteBatch, Vector2 spacePositionOffset, Vector2 onShipPosition, float scale)
+        protected virtual void InnerDraw(SpriteBatch spriteBatch, Vector2 spacePositionOffset, Vector2 onShipPosition, float scale,
+            bool isEditorMode = false )
         {
-            BlocksHolder.Draw(spriteBatch, GetDrawPosition(spacePositionOffset, scale, onShipPosition),
-                BlocksHolder.GetCenter(), Owner.Angle, Color, scale);
+            float actualAngle = Owner.Angle;
+
+            if (isEditorMode)
+                actualAngle = 0;
+
+            BlocksHolder.Draw(spriteBatch, GetDrawPosition(spacePositionOffset, scale, onShipPosition, isEditorMode),
+                BlocksHolder.GetCenter(), actualAngle, Color, scale);
         }
         
         public virtual Texture2D GetImage()

@@ -160,6 +160,8 @@ namespace HorizonVenture.HorizonVenture.Space.SpaceEntities
             else if (_angle >= 360)
                 _angle -= 360;
 
+         
+
             _speed.X += (Acceleration.X  * gameTime.ElapsedGameTime.Milliseconds) / 1000.0f;
             _speed.Y += (Acceleration.Y * gameTime.ElapsedGameTime.Milliseconds) / 1000.0f;
 
@@ -169,6 +171,7 @@ namespace HorizonVenture.HorizonVenture.Space.SpaceEntities
 
       //  private static readonly float VECTOR_SPEED_DOWN = 100;
         private static readonly float ACCELERATION_DOWN = 1;
+        private static readonly float RESET_VECTOR_SPEED = 10f;
 
         private Vector2 _speedNormalized = new Vector2();
         protected void UpdateVectorSpeedDown(GameTime gameTime)
@@ -183,6 +186,12 @@ namespace HorizonVenture.HorizonVenture.Space.SpaceEntities
             float acc = Helper.GetVectorSpeed(enginesPower, weigth);
 
 
+            if (_acceleration.Length() == 0 && _speed.Length() <= RESET_VECTOR_SPEED)
+            {
+                _speed.X = 0;
+                _speed.Y = 0;
+            }
+
             if (Speed.Length() == 0)
             {
                 return;
@@ -191,10 +200,12 @@ namespace HorizonVenture.HorizonVenture.Space.SpaceEntities
             {
                 _speedNormalized = _speed;
 
-                _speedNormalized.Normalize(); 
+                _speedNormalized.Normalize();
 
-                _acceleration.X -= (_speedNormalized.X * (acc / 2));
-                _acceleration.Y -= (_speedNormalized.Y * (acc / 2));
+                
+
+                _acceleration.X -= (_speedNormalized.X * (float)Math.Pow(_speed.Length() / 20, 2));
+                _acceleration.Y -= (_speedNormalized.Y * (float)Math.Pow(_speed.Length() / 20, 2));
             }
 
             if (Acceleration.Length() < ACCELERATION_DOWN)
@@ -215,11 +226,11 @@ namespace HorizonVenture.HorizonVenture.Space.SpaceEntities
             if (AngleSpeed.Equals(0))
                 return;
 
-            if (Math.Abs(AngleSpeed) < ANGLE_SPEED_DOWN)
+         /*   if (Math.Abs(AngleSpeed) < ANGLE_SPEED_DOWN)
             {
                 AngleSpeed = 0;
                 return;
-            }
+            }*/
 
             AngleSpeed -= AngleSpeed > 0 ? ANGLE_SPEED_DOWN : -ANGLE_SPEED_DOWN;
         }
@@ -309,6 +320,7 @@ namespace HorizonVenture.HorizonVenture.Space.SpaceEntities
 
             if (Math.Abs(angleDifference) < ANGLE_SPEED_DOWN / 10.0f)
             {
+                _angle = targetAngle;
                 return;
             }
 
@@ -318,6 +330,12 @@ namespace HorizonVenture.HorizonVenture.Space.SpaceEntities
 
             float toAddAngleSpeed = (Helper.GetAngleSpeedAcceleration(enginesPower, weigth));
 
+            if (Math.Abs(toAddAngleSpeed / 50.0f) > Math.Abs(angleDifference))
+            {
+                _angle = targetAngle;
+                return;
+            }
+
             if (angleDifference < 0)
             {
                 AngleSpeed += toAddAngleSpeed * -1;
@@ -326,6 +344,8 @@ namespace HorizonVenture.HorizonVenture.Space.SpaceEntities
             {
                 AngleSpeed += toAddAngleSpeed;
             }
+
+            
         }
 
        // private float _targetAngle;

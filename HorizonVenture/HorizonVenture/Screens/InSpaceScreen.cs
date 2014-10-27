@@ -60,7 +60,7 @@ namespace HorizonVenture.HorizonVenture.Screens
 
         private void DrawFps(SpriteBatch spriteBatch)
         {
-            spriteBatch.DrawString(_sp, String.Format("{0}", _fps), new Vector2(0, 0), Color.White);
+            spriteBatch.DrawString(_sp, String.Format("{0} speed {1}", _fps, _game.PlayerShip.Speed.Length()), new Vector2(0, 0), Color.White);
         }
 
         private void UpdateFps(GameTime gameTime)

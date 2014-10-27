@@ -17,6 +17,9 @@ namespace HorizonVenture.HorizonVenture.Space.SpaceEntities.Ships
 
         public List<AbstractEntityComponent> OwnedComponents { get; private set; }
 
+        public DrawHandler OnPreDrawEditorSpaceEntity;
+        public DrawHandler OnPostDrawEditorSpaceEntity;
+
         public PlayerShip(HorizonVentureSpace horizonVentureSpace, Vector2 spacePosition)
             : base(horizonVentureSpace, spacePosition)
         {
@@ -28,6 +31,9 @@ namespace HorizonVenture.HorizonVenture.Space.SpaceEntities.Ships
             EntityComponents.Add(new SimpleEngine(this, new Vector2(7, 22)));
 
             OwnedComponents = new List<AbstractEntityComponent>();
+            OwnedComponents.Add(new SimpleEngine(this));
+            OwnedComponents.Add(new SimpleEngine(this));
+            OwnedComponents.Add(new SimpleEngine(this));
             OwnedComponents.Add(new SimpleEngine(this));
             OwnedComponents.Add(new SimpleEngine(this));
             OwnedComponents.Add(new SimpleEngine(this));
@@ -85,22 +91,22 @@ namespace HorizonVenture.HorizonVenture.Space.SpaceEntities.Ships
 
         public void DetailShipDraw(SpriteBatch spriteBatch, Vector2 screenCenter, float scale)
         {
-            _screenCenterOffSet.X = ((screenCenter.X - (HorizonVentureSpace.getGame().GetScreenSize().X / 2)) / scale) +
-                ((HorizonVentureSpace.getGame().GetScreenSize().X / 2) / scale);
-            _screenCenterOffSet.Y = ((screenCenter.Y - (HorizonVentureSpace.getGame().GetScreenSize().Y / 2)) / scale) + 
-                ((HorizonVentureSpace.getGame().GetScreenSize().Y / 2) / scale);
+            _screenCenterOffSet.X = screenCenter.X / scale;// + (HorizonVentureSpace.getGame().GetScreenSize().X / 2)) / scale)
+              //  ;// +
+                // ((HorizonVentureSpace.getGame().GetScreenSize().X / 2) / scale);
+            _screenCenterOffSet.Y = screenCenter.Y / scale;
 
-            if (OnPreDrawSpaceEntity != null)
+            if (OnPreDrawEditorSpaceEntity != null)
             {
-                OnPreDrawSpaceEntity(this, new DrawArgs(spriteBatch, _screenCenterOffSet, scale));
+                OnPreDrawEditorSpaceEntity(this, new DrawArgs(spriteBatch, _screenCenterOffSet, scale));
             }          
 
             this.BlocksHolder.Draw(spriteBatch, screenCenter,
                 this.BlocksHolder.GetCenter(), 0, _color, scale);
 
-            if (OnPostDrawSpaceEntity != null)
+            if (OnPostDrawEditorSpaceEntity != null)
             {
-                OnPostDrawSpaceEntity(this, new DrawArgs(spriteBatch, _screenCenterOffSet, scale));
+                OnPostDrawEditorSpaceEntity(this, new DrawArgs(spriteBatch, _screenCenterOffSet, scale));
             }
         }
 

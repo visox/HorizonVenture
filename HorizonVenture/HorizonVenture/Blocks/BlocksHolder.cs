@@ -11,7 +11,7 @@ namespace HorizonVenture.HorizonVenture.Blocks
     {
         Dictionary<Vector2, AbstractBlock> _blocks;
         private HorizonVentureGame _game;
-        private Texture2D _allTextures;
+        private Texture2D [] _allTextures;
         private int _maxX, _minX, _maxY, _minY;
 
         public static readonly int SCALE_1_BLOCK_SIZE = 16;
@@ -60,13 +60,16 @@ namespace HorizonVenture.HorizonVenture.Blocks
             if ((_maxY - _minY) % 2 == 0)
                 _maxY++;
 
-            _allTextures =
+            _allTextures = new Texture2D[4];
+
+            _allTextures[0] =
                      new Texture2D(
                _game.GraphicsDevice,
                (int)(SCALE_1_BLOCK_SIZE * 1 * ((_maxX - _minX) + 1)),
                (int)(SCALE_1_BLOCK_SIZE * 1 * ((_maxY - _minY) + 1)),
                false, SurfaceFormat.Color);
 
+            
 
 
             foreach (Vector2 v in this._blocks.Keys)
@@ -80,12 +83,51 @@ namespace HorizonVenture.HorizonVenture.Blocks
                 Color[] imageData = new Color[(toDraw.Width * toDraw.Height)];
                 toDraw.GetData<Color>(imageData);
 
-                _allTextures.SetData<Color>(0, new Rectangle(
+                _allTextures[0].SetData<Color>(0, new Rectangle(
                         (int)(SCALE_1_BLOCK_SIZE * _realBlockPosition.X)
                         , (int)(SCALE_1_BLOCK_SIZE * _realBlockPosition.Y)
                         , (int)(SCALE_1_BLOCK_SIZE)
                         , (int)(SCALE_1_BLOCK_SIZE)), imageData,
                         0, imageData.Length);                    
+            }
+
+            for (int i = 1; i < _allTextures.Length; i++)
+            {
+
+                Color[] imageDataAll = new Color[(_allTextures[i - 1].Width * _allTextures[i - 1].Height)];
+                _allTextures[i - 1].GetData<Color>(imageDataAll);
+
+                Color[] imageDataAllOut = new Color[imageDataAll.Length / 4];
+                for (int x = 0; x < _allTextures[i - 1].Width; x += 2)
+                {
+                    for (int y = 0; y < _allTextures[i - 1].Height; y += 2)
+                    {
+                        Color[] colors = new Color[4];
+
+                        for (int xx = 0; xx < 2; xx++)
+                        {
+                            for (int yy = 0; yy < 2; yy++)
+                            {
+                                colors[(xx * 2) + yy] = imageDataAll[((y + yy) * _allTextures[i - 1].Width) + (x + xx)];
+                            }
+                        }
+
+                        float averA = colors.Sum(c => c.A) / 4.0f;
+                        float averB = colors.Sum(c => c.B) / 4.0f;
+                        float averG = colors.Sum(c => c.G) / 4.0f;
+                        float averR = colors.Sum(c => c.R) / 4.0f;
+
+                        Color outputColor = new Color(averR / 255.0f, averG / 255.0f, averB / 255.0f, averA / 255.0f);
+
+                        imageDataAllOut[((y / 2) * (_allTextures[i - 1].Width / 2)) + (x / 2)] = outputColor;
+                    }
+                }
+
+                _allTextures[i] = new Texture2D(_game.GraphicsDevice, _allTextures[i - 1].Width / 2, _allTextures[i - 1].Height / 2);
+
+                _allTextures[i].SetData<Color>(0, new Rectangle(
+                            0, 0, _allTextures[i - 1].Width / 2, _allTextures[i - 1].Height / 2), imageDataAllOut,
+                            0, imageDataAllOut.Length);
             }
 
         }
@@ -120,15 +162,29 @@ namespace HorizonVenture.HorizonVenture.Blocks
 
         public void Draw(SpriteBatch spriteBatch, Vector2 position, Vector2 origin, float angle, Color color, float scale)
         {
+            int index = 0;
+            float actualScale = scale;
+            Texture2D actualTexture = _allTextures[index];
+            Vector2 actualOrigin = origin;
 
-            spriteBatch.Draw(_allTextures, position, null, color, MathHelper.ToRadians(angle), origin,
-               scale, SpriteEffects.None, 0);
+            
+            while (actualScale < 1 && index+1 < _allTextures.Length)
+            {
+                index++;
+                actualScale *= 2;
+                actualTexture = _allTextures[index];
+                actualOrigin.X /= 2.0f;
+                actualOrigin.Y /= 2.0f;
+            }
+
+            spriteBatch.Draw(actualTexture, position, null, color, MathHelper.ToRadians(angle), actualOrigin,
+               actualScale, SpriteEffects.None, 0);
 
         }
 
         public Texture2D GetImage()
         {
-            return _allTextures;
+            return _allTextures[0];
         }
 
     }

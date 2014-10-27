@@ -321,7 +321,7 @@ namespace HorizonVenture.HorizonVenture.Screens
         {
             base.Update(gameTime);
 
-            UpdateShip(gameTime);
+         //   UpdateShip(gameTime);
 
             UpdateScrollDelay(gameTime);
         }
