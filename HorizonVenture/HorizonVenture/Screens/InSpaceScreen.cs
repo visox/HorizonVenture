@@ -29,6 +29,12 @@ namespace HorizonVenture.HorizonVenture.Screens
         protected override void Init()
         {
             InputManager.AddKeyPressHandlers(Keys.S, sKeyPressed);
+            InputManager.AddKeyPressHandlers(Keys.H, hKeyPressed);
+        }
+
+        private void hKeyPressed(object sender, InputManager.KeyPressArgs e)
+        {
+            _game.ShowShipHullEditScreen();
         }
 
 
@@ -37,6 +43,7 @@ namespace HorizonVenture.HorizonVenture.Screens
             base.UnInit();
 
             InputManager.RemoveKeyPressHandlers(Keys.S, sKeyPressed);
+            InputManager.RemoveKeyPressHandlers(Keys.S, hKeyPressed);
 
         }
         void sKeyPressed(object sender, InputManager.KeyPressArgs e)

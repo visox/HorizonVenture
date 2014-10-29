@@ -12,7 +12,7 @@ using System.Text;
 
 namespace HorizonVenture.HorizonVenture.Screens
 {
-    public class ShipEditScreen : AbstractScreen
+    public class ShipComponentsEditScreen : AbstractScreen
     {
         public PlayerShip PlayerShip { get; set; }
 
@@ -26,7 +26,7 @@ namespace HorizonVenture.HorizonVenture.Screens
         private float _scrollDelay;
         private static readonly float SCROLL_DELAY = 100f;
 
-        public ShipEditScreen(HorizonVentureGame game)
+        public ShipComponentsEditScreen(HorizonVentureGame game)
             : base(game)
         {
             _backgroundColor = Color.Black;

@@ -24,8 +24,8 @@ namespace HorizonVenture.HorizonVenture.Space.SpaceEntities.Ships
             : base(horizonVentureSpace, spacePosition)
         {
             BlocksHolder = BitmapBlocksHolderPatternSupplier.getPatterShip1(horizonVentureSpace.getGame());
-             //   BlocksHolderPatternSupplier.getExampleShipPatter(horizonVentureSpace.getGame());
-        //    EntityComponents.Add(new SimpleEngine(this, new Vector2(0,0)));
+            //   BlocksHolderPatternSupplier.getExampleShipPatter(horizonVentureSpace.getGame());
+            //    EntityComponents.Add(new SimpleEngine(this, new Vector2(0,0)));
 
             EntityComponents.Add(new SimpleEngine(this, new Vector2(-6, 22)));
             EntityComponents.Add(new SimpleEngine(this, new Vector2(7, 22)));
@@ -46,16 +46,16 @@ namespace HorizonVenture.HorizonVenture.Space.SpaceEntities.Ships
 
         public override void Update(GameTime gameTime)
         {
-          //  userInputHandle();
+            //  userInputHandle();
 
-          //  rotate(gameTime.ElapsedGameTime.Milliseconds);
+            //  rotate(gameTime.ElapsedGameTime.Milliseconds);
 
             base.Update(gameTime);
         }
 
         private void rotate(double delta)
         {
-            this.Angle = (float)((this.Angle + (0.001f * delta)) % (2*Math.PI));
+            this.Angle = (float)((this.Angle + (0.001f * delta)) % (2 * Math.PI));
         }
 
 
@@ -91,15 +91,14 @@ namespace HorizonVenture.HorizonVenture.Space.SpaceEntities.Ships
 
         public void DetailShipDraw(SpriteBatch spriteBatch, Vector2 screenCenter, float scale)
         {
-            _screenCenterOffSet.X = screenCenter.X / scale;// + (HorizonVentureSpace.getGame().GetScreenSize().X / 2)) / scale)
-              //  ;// +
-                // ((HorizonVentureSpace.getGame().GetScreenSize().X / 2) / scale);
+            _screenCenterOffSet.X = screenCenter.X / scale;
             _screenCenterOffSet.Y = screenCenter.Y / scale;
 
             if (OnPreDrawEditorSpaceEntity != null)
             {
                 OnPreDrawEditorSpaceEntity(this, new DrawArgs(spriteBatch, _screenCenterOffSet, scale));
-            }          
+            }
+
 
             this.BlocksHolder.Draw(spriteBatch, screenCenter,
                 this.BlocksHolder.GetCenter(), 0, _color, scale);
@@ -108,6 +107,7 @@ namespace HorizonVenture.HorizonVenture.Space.SpaceEntities.Ships
             {
                 OnPostDrawEditorSpaceEntity(this, new DrawArgs(spriteBatch, _screenCenterOffSet, scale));
             }
+
         }
 
     }

@@ -25,6 +25,11 @@ namespace HorizonVenture.HorizonVenture.Blocks
             _maxX = this._maxY = this._minX = this._minY = 0;
         }
 
+        public Dictionary<Vector2, AbstractBlock> GetBlocks()
+        {
+            return _blocks;
+        }
+
         Vector2 _realBlockPosition = new Vector2();
 
         public void addBlocks(Dictionary<Vector2, AbstractBlock> blocksToAdd)
@@ -166,7 +171,6 @@ namespace HorizonVenture.HorizonVenture.Blocks
             float actualScale = scale;
             Texture2D actualTexture = _allTextures[index];
             Vector2 actualOrigin = origin;
-
             
             while (actualScale < 1 && index+1 < _allTextures.Length)
             {
@@ -179,7 +183,6 @@ namespace HorizonVenture.HorizonVenture.Blocks
 
             spriteBatch.Draw(actualTexture, position, null, color, MathHelper.ToRadians(angle), actualOrigin,
                actualScale, SpriteEffects.None, 0);
-
         }
 
         public Texture2D GetImage()

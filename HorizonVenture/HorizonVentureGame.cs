@@ -17,7 +17,9 @@ namespace HorizonVenture
 
         public MainMenuScreen MainMenuScreen { get; private set; }
         public InSpaceScreen InSpaceScreen { get; private set; }
-        public ShipEditScreen ShipEditScreen { get; private set; }
+        public ShipComponentsEditScreen ShipEditScreen { get; private set; }
+        public ShipHullEditScreen ShipHullEditScreen { get; private set; }
+        
 
         HorizonVentureSpace _horizonVentureSpace;
         
@@ -59,8 +61,8 @@ namespace HorizonVenture
 
             InSpaceScreen = new InSpaceScreen(this);
 
-            ShipEditScreen = new ShipEditScreen(this);
-
+            ShipEditScreen = new ShipComponentsEditScreen(this);
+            ShipHullEditScreen = new ShipHullEditScreen(this);
 
             _horizonVentureSpace = new HorizonVentureSpace(this, PlayerShip);
             PlayerShip = new PlayerShip(_horizonVentureSpace, new Vector2(0, 0));
@@ -133,6 +135,12 @@ namespace HorizonVenture
             Exit();
         }
 
-       
+
+
+        internal void ShowShipHullEditScreen()
+        {
+            ShipHullEditScreen.Show();
+            ShipHullEditScreen.PlayerShip = PlayerShip;
+        }
     }
 }

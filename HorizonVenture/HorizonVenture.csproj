@@ -71,7 +71,8 @@
     <Compile Include="HorizonVenture\Screens\InSpaceScreen.cs" />
     <Compile Include="HorizonVenture\Screens\MainMenuScreen.cs" />
     <Compile Include="HorizonVenture\EntityComponents\AbstractEntityComponent.cs" />
-    <Compile Include="HorizonVenture\Screens\ShipEditScreen.cs" />
+    <Compile Include="HorizonVenture\Screens\ShipComponentsEditScreen.cs" />
+    <Compile Include="HorizonVenture\Screens\ShipHullEditScreen.cs" />
     <Compile Include="HorizonVenture\SpaceEntities\Ships\AIShips\AbstractAIShip.cs" />
     <Compile Include="HorizonVenture\SpaceEntities\Ships\AIShips\ComplexShips\AbstractComplexAIShip.cs" />
     <Compile Include="HorizonVenture\SpaceEntities\Ships\AIShips\ComplexShips\BasicComplexAIShip.cs" />
