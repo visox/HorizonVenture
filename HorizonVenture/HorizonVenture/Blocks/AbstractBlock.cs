@@ -6,7 +6,7 @@ using System.Text;
 
 namespace HorizonVenture.HorizonVenture.Blocks
 {
-    public class AbstractBlock
+    public class AbstractBlock : ICloneable
     {
         protected string _id;
 
@@ -20,6 +20,9 @@ namespace HorizonVenture.HorizonVenture.Blocks
             return BlockDefinitions.getTextureById(this._id, game);
         }
 
-
+        public virtual object Clone()
+        {
+            return new AbstractBlock(_id);
+        }
     }
 }

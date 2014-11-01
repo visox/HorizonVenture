@@ -55,9 +55,19 @@ namespace HorizonVenture.HorizonVenture
         public static Vector2 RotateAroundOrigin(Vector2 point, Vector2 origin, float angle)
         {
             return Vector2.Transform(point - origin, Matrix.CreateRotationZ(MathHelper.ToRadians(angle))) + origin;
-        } 
+        }
 
-
+        public static Dictionary<TKey, TValue> CloneDictionaryCloningValues<TKey, TValue>
+   (Dictionary<TKey, TValue> original) where TValue : ICloneable
+        {
+            Dictionary<TKey, TValue> ret = new Dictionary<TKey, TValue>(original.Count,
+                                                                    original.Comparer);
+            foreach (KeyValuePair<TKey, TValue> entry in original)
+            {
+                ret.Add(entry.Key, (TValue)entry.Value.Clone());
+            }
+            return ret;
+        }
     }
 
     public delegate void DrawHandler(object sender, DrawArgs e);
@@ -91,7 +101,7 @@ namespace HorizonVenture.HorizonVenture
 
     public class UpdateArgs : EventArgs
     {
-        public GameTime GameTime {get; private set;}
+        public GameTime GameTime { get; private set; }
 
         public UpdateArgs(GameTime gameTime)
         {
@@ -100,7 +110,7 @@ namespace HorizonVenture.HorizonVenture
 
     }
 
-    
+
 
     public static class RandomExtensions
     {

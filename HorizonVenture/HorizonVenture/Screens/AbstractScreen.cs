@@ -129,5 +129,21 @@ namespace HorizonVenture.HorizonVenture.Screens
                1, SpriteEffects.None, 0);
         }
 
+        protected Vector2 _cursorPositionOnShip = new Vector2(0, 0);
+
+        protected virtual Vector2 GetCursorPositionOnShip(Vector2 offset, float scale)
+        {
+            _cursorPositionOnShip.X = InputManager.MouseState.X - offset.X/* + (Blocks.BlocksHolder.SCALE_1_BLOCK_SIZE / 2)*/;
+            _cursorPositionOnShip.Y = InputManager.MouseState.Y - offset.Y/* + (Blocks.BlocksHolder.SCALE_1_BLOCK_SIZE / 2)*/;
+
+            _cursorPositionOnShip.X /= Blocks.BlocksHolder.SCALE_1_BLOCK_SIZE * scale;
+            _cursorPositionOnShip.Y /= Blocks.BlocksHolder.SCALE_1_BLOCK_SIZE * scale;
+
+            _cursorPositionOnShip.X = (float)Math.Round(_cursorPositionOnShip.X);
+            _cursorPositionOnShip.Y = (float)Math.Round(_cursorPositionOnShip.Y);
+
+            return _cursorPositionOnShip;
+        }
+
     }
 }

@@ -7,9 +7,9 @@ using System.Text;
 
 namespace HorizonVenture.HorizonVenture.Controls
 {
-    class Panel : Control
+    public class Panel : Control
     {
-        private Texture2D _background;
+        protected Texture2D _background;
 
         public Color DrawBackgroundColor { get; set; }
 

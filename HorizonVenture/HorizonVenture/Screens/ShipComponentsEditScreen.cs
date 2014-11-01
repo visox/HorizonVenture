@@ -19,9 +19,9 @@ namespace HorizonVenture.HorizonVenture.Screens
 
         public Vector2 _screenCenter;
         public float Scale { get; set; }
-        public int ComponentsPanelIndex { get; set; }
 
-        private Panel _rightShipComponentsPanel;
+
+        private RightShipComponentsPanel _rightShipComponentsPanel;
 
         private float _scrollDelay;
         private static readonly float SCROLL_DELAY = 100f;
@@ -32,7 +32,6 @@ namespace HorizonVenture.HorizonVenture.Screens
             _backgroundColor = Color.Black;
             _screenCenter = new Vector2((game.GetScreenSize().X - PANEL_WIDTH )/ 2, game.GetScreenSize().Y / 2);
             Scale = 1;
-            ComponentsPanelIndex = 0;
             _scrollDelay = 0;
         }
 
@@ -54,7 +53,7 @@ namespace HorizonVenture.HorizonVenture.Screens
 
             InputManager.OnMouseScrollChange += mouseScrollChanged;
 
-            InputManager.OnMouseLeftKeyRelease += _wasMouseLeftKeyReleased;
+            InputManager.OnMouseLeftKeyRelease += _mouseLeftKeyReleased;
             InputManager.OnMousePositionChanged += mousePositionChanged;
 
             if (_controls.Count != 0)
@@ -94,7 +93,7 @@ namespace HorizonVenture.HorizonVenture.Screens
             }
         }
 
-        private void _wasMouseLeftKeyReleased(object sender, InputManager.MouseKeyReleaseArgs e)
+        private void _mouseLeftKeyReleased(object sender, InputManager.MouseKeyReleaseArgs e)
         {
             if (_isScreenMove)
             {
@@ -158,21 +157,7 @@ namespace HorizonVenture.HorizonVenture.Screens
             }
         }
 
-        private Vector2 _cursorPositionOnShip = new Vector2(0, 0);
-
-        private Vector2 GetCursorPositionOnShip()
-        {
-            _cursorPositionOnShip.X = InputManager.MouseState.X - _screenCenter.X/* + (Blocks.BlocksHolder.SCALE_1_BLOCK_SIZE / 2)*/;
-            _cursorPositionOnShip.Y = InputManager.MouseState.Y - _screenCenter.Y/* + (Blocks.BlocksHolder.SCALE_1_BLOCK_SIZE / 2)*/;
-
-            _cursorPositionOnShip.X /= Blocks.BlocksHolder.SCALE_1_BLOCK_SIZE * Scale;
-            _cursorPositionOnShip.Y /= Blocks.BlocksHolder.SCALE_1_BLOCK_SIZE * Scale;
-
-            _cursorPositionOnShip.X = (float)Math.Round(_cursorPositionOnShip.X);
-            _cursorPositionOnShip.Y = (float)Math.Round(_cursorPositionOnShip.Y);
-
-            return _cursorPositionOnShip;
-        }
+        
 
         private Boolean IsLeftMouseKeyPressAddComponent()
         {
@@ -204,8 +189,7 @@ namespace HorizonVenture.HorizonVenture.Screens
 
             if (IsLeftMouseKeyPressAddComponent())
             {
-                Vector2 toAddPosition = GetCursorPositionOnShip();
-                //  Vector2 toAddPosition = new Vector2(toAddPositionTmp.X, toAddPositionTmp.Y);
+                Vector2 toAddPosition = GetCursorPositionOnShip(_screenCenter, Scale);
 
                 AbstractEntityComponent aec = PlayerShip.OwnedComponents[_selectedComponent];
 
@@ -233,7 +217,7 @@ namespace HorizonVenture.HorizonVenture.Screens
             _cursor = null;
         }
 
-        private static readonly int COMPONENTS_SHOW_COUNT = 5;
+        
 
         private void AddRightShipComponentsPanel()
         {
@@ -242,65 +226,23 @@ namespace HorizonVenture.HorizonVenture.Screens
                 _controls.Remove(_rightShipComponentsPanel);
             }
 
-            Texture2D background = _game.GetContent().Load<Texture2D>(@"Controls\Buttons\background0");
-            SpriteFont spriteFont = _game.GetContent().Load<SpriteFont>(@"Controls\Buttons\Fonts\Button");
-            Vector2 screenSize = _game.GetScreenSize();
-
-            _rightShipComponentsPanel = new Panel(background,
-                           new Rectangle((int)(screenSize.X - PANEL_WIDTH), 0, PANEL_WIDTH, (int)(screenSize.Y)));
-
-            _rightShipComponentsPanel.DrawBackgroundColor = new Color(255, 255, 255, 128);
-
+            _rightShipComponentsPanel = new RightShipComponentsPanel(_game);
+            _rightShipComponentsPanel.Click += addComponentButton_Click;
             _controls.Add(_rightShipComponentsPanel);
 
 
-            AddComponentsToRightPanel();
+         //   AddComponentsToRightPanel();
         }
 
-        private static readonly float COMPONENTS_IMAGEBUTTON_SIZE = 100;
-        private static readonly float COMPONENTS_IMAGEBUTTON_MARGIN = 20;
-
-        private void AddComponentsToRightPanel()
+        private void addComponentButton_Click(object sender, RightShipComponentsPanel.ComponentClickArgs e)
         {
-            _rightShipComponentsPanel.Controls.Clear();
+            _cursor = PlayerShip.OwnedComponents[_rightShipComponentsPanel.SelectedComponent].GetImage();
+            _cursorCenter.X = _cursor.Width / 2;
+            _cursorCenter.Y = _cursor.Height / 2;
 
-            Texture2D background = _game.GetContent().Load<Texture2D>(@"Controls\Buttons\background1");
-            SpriteFont spriteFont = _game.GetContent().Load<SpriteFont>(@"Controls\Buttons\Fonts\Button");
-            Vector2 screenSize = _game.GetScreenSize();
-
-            for (int i = ComponentsPanelIndex; i < COMPONENTS_SHOW_COUNT + ComponentsPanelIndex; i++)
-            {
-                if (i >= PlayerShip.OwnedComponents.Count)
-                    break;
-
-                Texture2D componentImage = PlayerShip.OwnedComponents[i].GetImage();
-
-                ImageButton addComponentButton = new ImageButton(background, componentImage,
-                    new Rectangle(
-                        (int)(_rightShipComponentsPanel.Position.Right - COMPONENTS_IMAGEBUTTON_MARGIN - COMPONENTS_IMAGEBUTTON_SIZE),
-                        (int)(_rightShipComponentsPanel.Position.Top + COMPONENTS_IMAGEBUTTON_MARGIN +
-                            ((COMPONENTS_IMAGEBUTTON_SIZE + COMPONENTS_IMAGEBUTTON_MARGIN) * (i - ComponentsPanelIndex))),
-                        (int)COMPONENTS_IMAGEBUTTON_SIZE, 
-                        (int)COMPONENTS_IMAGEBUTTON_SIZE));
-
-                addComponentButton.DrawBackgroundColor = new Color(50, 255, 50, 128);
-
-                addComponentButton.Tag = i.ToString();
-
-                float maxSize = Math.Max(componentImage.Height, componentImage.Width);
-                float curScale = 1;
-
-                while (maxSize * curScale > COMPONENTS_IMAGEBUTTON_SIZE)
-                {
-                    curScale *= 0.5f;
-                }
-                addComponentButton.Scale = curScale;
-
-                addComponentButton.Click += addComponentButton_Click;
-
-                _controls.Add(addComponentButton);
-            }
+            _selectedComponent = _rightShipComponentsPanel.SelectedComponent;
         }
+
 
         protected override void UnInit()
         {
@@ -313,7 +255,7 @@ namespace HorizonVenture.HorizonVenture.Screens
 
             InputManager.OnMouseScrollChange -= mouseScrollChanged;
 
-            InputManager.OnMouseLeftKeyRelease -= _wasMouseLeftKeyReleased;
+            InputManager.OnMouseLeftKeyRelease -= _mouseLeftKeyReleased;
             InputManager.OnMousePositionChanged -= mousePositionChanged;
         }
 

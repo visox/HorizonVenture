@@ -25,6 +25,11 @@ namespace HorizonVenture.HorizonVenture.Blocks
             _maxX = this._maxY = this._minX = this._minY = 0;
         }
 
+        public void ClearBlocks()
+        {
+            _blocks.Clear();
+        }
+
         public Dictionary<Vector2, AbstractBlock> GetBlocks()
         {
             return _blocks;
@@ -137,6 +142,7 @@ namespace HorizonVenture.HorizonVenture.Blocks
 
         }
 
+
         public int GetBlocksCount()
         {
             return _blocks.Count;
@@ -165,6 +171,26 @@ namespace HorizonVenture.HorizonVenture.Blocks
             return _maxY - _minY;
         }
 
+        public int GetMinX()
+        {
+            return _minX;
+        }
+
+        public int GetMinY()
+        {
+            return _minY;
+        }
+
+        public int GetMaxX()
+        {
+            return _maxX;
+        }
+
+        public int GetMaxY()
+        {
+            return _maxY;
+        }
+
         public void Draw(SpriteBatch spriteBatch, Vector2 position, Vector2 origin, float angle, Color color, float scale)
         {
             int index = 0;
@@ -190,5 +216,14 @@ namespace HorizonVenture.HorizonVenture.Blocks
             return _allTextures[0];
         }
 
+
+        public AbstractBlock GetBlockByPosition(Vector2 position)
+        {
+            List<Vector2> key = _blocks.Keys.Where(k => position.X == k.X && position.Y == k.Y).ToList();
+            if (key.Count() == 0)
+                return null;
+
+            return _blocks[key.ElementAt(0)];
+        }
     }
 }
