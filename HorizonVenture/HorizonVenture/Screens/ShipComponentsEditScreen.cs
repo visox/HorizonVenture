@@ -30,7 +30,7 @@ namespace HorizonVenture.HorizonVenture.Screens
             : base(game)
         {
             _backgroundColor = Color.Black;
-            _screenCenter = new Vector2((game.GetScreenSize().X - PANEL_WIDTH )/ 2, game.GetScreenSize().Y / 2);
+            _screenCenter = new Vector2((game.GetScreenSize().X - RightShipComponentsPanel.DEFAULT_WIDTH) / 2, game.GetScreenSize().Y / 2);
             Scale = 1;
             _scrollDelay = 0;
         }
@@ -41,7 +41,7 @@ namespace HorizonVenture.HorizonVenture.Screens
         private static readonly int BUTTON_HEIGHT = 50;
 
         private static readonly int PLUS_MINUS_WIDTH = 50;
-        private static readonly int PANEL_WIDTH = 300;
+   //     private static readonly int PANEL_WIDTH = 300;
 
         protected override void Init()
         {
@@ -64,7 +64,7 @@ namespace HorizonVenture.HorizonVenture.Screens
             Vector2 screenSize = _game.GetScreenSize();
 
             Button plusButton = new Button(background, "+", spriteFont,
-                new Rectangle((int)(screenSize.X - PANEL_WIDTH - BUTTON_HEIGHT), BUTTON_HEIGHT, PLUS_MINUS_WIDTH, BUTTON_HEIGHT));
+                new Rectangle((int)(screenSize.X - RightShipComponentsPanel.DEFAULT_WIDTH - BUTTON_HEIGHT), BUTTON_HEIGHT, PLUS_MINUS_WIDTH, BUTTON_HEIGHT));
 
             plusButton.DrawBackgroundColor = Color.Aqua;
             plusButton.Click += plusButton_Click;
@@ -72,7 +72,7 @@ namespace HorizonVenture.HorizonVenture.Screens
             _controls.Add(plusButton);
 
             Button minusButton = new Button(background, "-", spriteFont,
-                new Rectangle((int)(screenSize.X - PANEL_WIDTH - BUTTON_HEIGHT), BUTTON_HEIGHT*3, PLUS_MINUS_WIDTH, BUTTON_HEIGHT));
+                new Rectangle((int)(screenSize.X - RightShipComponentsPanel.DEFAULT_WIDTH - BUTTON_HEIGHT), BUTTON_HEIGHT * 3, PLUS_MINUS_WIDTH, BUTTON_HEIGHT));
 
             minusButton.DrawBackgroundColor = Color.Aqua;
             minusButton.Click += minusButton_Click;
@@ -116,8 +116,8 @@ namespace HorizonVenture.HorizonVenture.Screens
                 {
                     Scale /= 2f;
 
-                    _toCenter.X = ((_game.GetScreenSize().X - PANEL_WIDTH) / 2)
-                        + ((_screenCenter.X - ((_game.GetScreenSize().X - PANEL_WIDTH) / 2)) / 2);
+                    _toCenter.X = ((_game.GetScreenSize().X - RightShipComponentsPanel.DEFAULT_WIDTH) / 2)
+                        + ((_screenCenter.X - ((_game.GetScreenSize().X - RightShipComponentsPanel.DEFAULT_WIDTH) / 2)) / 2);
                     _toCenter.Y = (_game.GetScreenSize().Y / 2)
                         + ((_screenCenter.Y - (_game.GetScreenSize().Y / 2)) / 2);
 
@@ -139,9 +139,9 @@ namespace HorizonVenture.HorizonVenture.Screens
                         _screenCenter.X = 0;
                     }
                     if ((-((PlayerShip.BlocksHolder.GetWidth() * (BlocksHolder.SCALE_1_BLOCK_SIZE * Scale))  / 2) + _screenCenter.X) >
-                        _game.GetScreenSize().X - PANEL_WIDTH)
+                        _game.GetScreenSize().X - RightShipComponentsPanel.DEFAULT_WIDTH)
                     {
-                        _screenCenter.X = _game.GetScreenSize().X - PANEL_WIDTH;
+                        _screenCenter.X = _game.GetScreenSize().X - RightShipComponentsPanel.DEFAULT_WIDTH;
                     }
                     //////
                     if ((((PlayerShip.BlocksHolder.GetHeight() * (BlocksHolder.SCALE_1_BLOCK_SIZE * Scale)) / 2) + _screenCenter.Y) < 0)

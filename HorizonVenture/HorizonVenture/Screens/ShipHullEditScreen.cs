@@ -28,6 +28,7 @@ namespace HorizonVenture.HorizonVenture.Screens
                 }
             }
         }
+
         private Dictionary<Vector2, AbstractBlock> _editedShip;
         private List<Vector2> _removedBlocksShip;
         private List<Vector2> _addedBlocksShip;
@@ -36,16 +37,11 @@ namespace HorizonVenture.HorizonVenture.Screens
 
         private float _scrollDelay;
         private static readonly float SCROLL_DELAY = 100f;
-        private Boolean _isScreenMove = false;
-
-        private float _leftMousePressReleaseTime;
-
-        private static readonly float PRESS_RELEASE_MOUSE_CHANGE_HULL = 200;
 
         public ShipHullEditScreen(HorizonVentureGame game)
             : base(game)
         {
-            _backgroundColor = Color.Green;
+            _backgroundColor = Color.Black;
             _screenCenter = new Vector2((game.GetScreenSize().X) / 2, game.GetScreenSize().Y / 2);
             Scale = 1;
             _scrollDelay = 0;
@@ -54,6 +50,11 @@ namespace HorizonVenture.HorizonVenture.Screens
         protected override void Init()
         {
             InputManager.AddKeyPressHandlers(Keys.H, hKeyPressed);
+
+            InputManager.AddKeyPressHandlers(Keys.Up, UpKeyPressed);
+            InputManager.AddKeyPressHandlers(Keys.Down, DownKeyPressed);
+            InputManager.AddKeyPressHandlers(Keys.Left, LeftKeyPressed);
+            InputManager.AddKeyPressHandlers(Keys.Right, RightKeyPressed);
             PlayerShip = _game.PlayerShip;
 
             InputManager.OnMouseLeftKeyPress += mouseLeftKeyPressed;
@@ -68,12 +69,93 @@ namespace HorizonVenture.HorizonVenture.Screens
             _addedBlocksShip = new List<Vector2>();
         }
 
+        private static readonly int ARROW_POSITION_CHANGE = 10;
+
+        private void UpKeyPressed(object sender, InputManager.KeyPressArgs e)
+        {
+            _screenCenter.Y += ARROW_POSITION_CHANGE * Blocks.BlocksHolder.SCALE_1_BLOCK_SIZE;
+        }
+
+        private void DownKeyPressed(object sender, InputManager.KeyPressArgs e)
+        {
+            _screenCenter.Y -= ARROW_POSITION_CHANGE * Blocks.BlocksHolder.SCALE_1_BLOCK_SIZE;
+        }
+
+        private void LeftKeyPressed(object sender, InputManager.KeyPressArgs e)
+        {
+            _screenCenter.X += ARROW_POSITION_CHANGE * Blocks.BlocksHolder.SCALE_1_BLOCK_SIZE;
+        }
+
+        private void RightKeyPressed(object sender, InputManager.KeyPressArgs e)
+        {
+            _screenCenter.X -= ARROW_POSITION_CHANGE * Blocks.BlocksHolder.SCALE_1_BLOCK_SIZE;
+        }
+
+        private void TryAddBlockByMouse()
+        {
+            Vector2 toAddPosition = GetCursorPositionOnShip(_screenCenter, Scale);
+
+            if (Math.Abs(PlayerShip.BlocksHolder.GetBlockCenter().X - toAddPosition.X) <= 50
+                && Math.Abs(PlayerShip.BlocksHolder.GetBlockCenter().Y - toAddPosition.Y) <= 50)
+            {
+                AbstractBlock block = GetBlockByPosition(toAddPosition);
+
+                if (block == null)
+                {
+                    AbstractBlock toAdd = new Block("metal1");
+                    _editedShip[toAddPosition] = toAdd;
+                    _addedBlocksShip.Add(toAddPosition);
+                }
+                else if (_removedBlocksShip.Contains(toAddPosition))
+                {
+                    AbstractBlock blockShip = PlayerShip.BlocksHolder.GetBlockByPosition(toAddPosition);
+
+                    if (blockShip != null)
+                    {
+                        _removedBlocksShip.Remove(toAddPosition);
+                    }
+                }
+            }
+        }
+
+        private void TryRemoveBlockByMouse()
+        {
+            Vector2 toRemovePosition = GetCursorPositionOnShip(_screenCenter, Scale);
+
+            AbstractBlock block = GetBlockByPosition(toRemovePosition);
+
+            if (block != null)
+            {
+                if (_editedShip.ContainsKey(toRemovePosition))
+                {
+
+                    AbstractBlock blockShip = PlayerShip.BlocksHolder.GetBlockByPosition(toRemovePosition);
+
+                    if (!_removedBlocksShip.Contains(toRemovePosition) &&
+                        blockShip != null)
+                    {
+                        _removedBlocksShip.Add(toRemovePosition);
+                    }
+
+                    if (blockShip == null)
+                    {
+                        _addedBlocksShip.Remove(toRemovePosition);
+                        _removedBlocksShip.Remove(toRemovePosition);
+                        _editedShip.Remove(toRemovePosition);
+                    }
+                }
+            }
+        }
+
         private void mousePositionChanged(object sender, InputManager.MousePositionChangedArgs e)
         {
-            if (_isScreenMove)
+            if (InputManager.MouseState.LeftButton == ButtonState.Pressed)
             {
-                _screenCenter.X += e.ChangeX;
-                _screenCenter.Y += e.ChangeY;
+                TryAddBlockByMouse();
+            }
+            else if (InputManager.MouseState.RightButton == ButtonState.Pressed)
+            {
+                TryRemoveBlockByMouse();
             }
         }
 
@@ -95,46 +177,9 @@ namespace HorizonVenture.HorizonVenture.Screens
 
         private void _mouseLeftKeyReleased(object sender, InputManager.MouseKeyReleaseArgs e)
         {
-            if (InTimeToAddBlock())
-            {
-                Vector2 toAddPosition = GetCursorPositionOnShip(_screenCenter, Scale);
 
-                if (PlayerShip.BlocksHolder.GetMinX() + toAddPosition.X <= 100
-                    && PlayerShip.BlocksHolder.GetMaxX() - 100 <= toAddPosition.X
-                    && PlayerShip.BlocksHolder.GetMinY() + toAddPosition.Y <= 100
-                    && PlayerShip.BlocksHolder.GetMaxY() - 100 <= toAddPosition.Y)
-                {
-                    AbstractBlock block = GetBlockByPosition(toAddPosition);
-
-                    if (block == null)
-                    {
-                        AbstractBlock toAdd = new Block("metal1");
-                        _editedShip[toAddPosition] = toAdd;
-                        _addedBlocksShip.Add(toAddPosition);
-                    }
-                    else if (_removedBlocksShip.Contains(toAddPosition))
-                    {
-                        AbstractBlock blockShip = PlayerShip.BlocksHolder.GetBlockByPosition(toAddPosition);
-
-                        if (blockShip != null)
-                        {
-                            _removedBlocksShip.Remove(toAddPosition);
-                        }
-                    }
-                }
-
-            }
-
-            if (_isScreenMove)
-            {
-                _isScreenMove = false;
-            }
         }
 
-        private bool InTimeToAddBlock()
-        {
-            return _leftMousePressReleaseTime <= PRESS_RELEASE_MOUSE_CHANGE_HULL;
-        }
 
         private Vector2 _toCenter = new Vector2(0, 0);
 
@@ -203,56 +248,23 @@ namespace HorizonVenture.HorizonVenture.Screens
 
         private void mouseRightKeyPressed(object sender, InputManager.MouseKeyPressArgs e)
         {
-            _cursor = null;
-
-            Vector2 toRemovePosition = GetCursorPositionOnShip(_screenCenter, Scale);
-
-            AbstractBlock block = GetBlockByPosition(toRemovePosition);
-
-            if (block != null)
-            {
-                if (_editedShip.ContainsKey(toRemovePosition))
-                {
-
-                    AbstractBlock blockShip = PlayerShip.BlocksHolder.GetBlockByPosition(toRemovePosition);
-
-                    if (!_removedBlocksShip.Contains(toRemovePosition) &&
-                        blockShip != null)
-                    {
-                        _removedBlocksShip.Add(toRemovePosition);
-                    }
-
-                    if (blockShip == null)
-                    {
-                        _addedBlocksShip.Remove(toRemovePosition);
-                        _removedBlocksShip.Remove(toRemovePosition);
-                        _editedShip.Remove(toRemovePosition);
-                    }
-                }
-            }
-
+            TryRemoveBlockByMouse();
         }
-
-
 
         private void mouseLeftKeyPressed(object sender, InputManager.MouseKeyPressArgs e)
         {
-            _leftMousePressReleaseTime = 0;
-
-            if (IsLeftMouseKeyPressMoveScreen())
-            {
-                _isScreenMove = true;
-            }
-        }
-
-        private bool IsLeftMouseKeyPressMoveScreen()
-        {
-            return true;
+            TryAddBlockByMouse();
         }
 
         protected override void UnInit()
         {
             InputManager.RemoveKeyPressHandlers(Keys.H, hKeyPressed);
+
+            InputManager.RemoveKeyPressHandlers(Keys.Up, UpKeyPressed);
+            InputManager.RemoveKeyPressHandlers(Keys.Down, DownKeyPressed);
+            InputManager.RemoveKeyPressHandlers(Keys.Left, LeftKeyPressed);
+            InputManager.RemoveKeyPressHandlers(Keys.Right, RightKeyPressed);
+
             InputManager.OnMouseLeftKeyPress -= mouseLeftKeyPressed;
             InputManager.OnMouseRightKeyPress -= mouseRightKeyPressed;
             InputManager.OnMouseScrollChange -= mouseScrollChanged;
@@ -264,7 +276,11 @@ namespace HorizonVenture.HorizonVenture.Screens
         {
             // Dictionary<Vector2, AbstractBlock> toAdd = new Dictionary<Vector2, AbstractBlock>();
 
+            float oldMinX = PlayerShip.BlocksHolder.GetMinX();
+            float oldMinY = PlayerShip.BlocksHolder.GetMinY();
 
+            float oldMaxX = PlayerShip.BlocksHolder.GetMaxX();
+            float oldMaxY = PlayerShip.BlocksHolder.GetMaxY();
 
             foreach (Vector2 key in _removedBlocksShip)
             {
@@ -272,6 +288,20 @@ namespace HorizonVenture.HorizonVenture.Screens
             }
             PlayerShip.BlocksHolder.ClearBlocks();
             PlayerShip.BlocksHolder.addBlocks(_editedShip);
+
+            float newMinX = PlayerShip.BlocksHolder.GetMinX();
+            float newMinY = PlayerShip.BlocksHolder.GetMinY();
+
+            float newMaxX = PlayerShip.BlocksHolder.GetMaxX();
+            float newMaxY = PlayerShip.BlocksHolder.GetMaxY();
+
+            if (newMinX != oldMinX || newMinY != oldMinY
+                || newMaxX != oldMaxX || newMaxY != oldMaxY)
+            {
+                PlayerShip.EntityComponents.ForEach(ec => ec.UpdatePositionOnShipByCenterChange(
+                     ((newMinX - oldMinX) / 2) + ((newMaxX - oldMaxX) / 2),
+                     ((newMinY - oldMinY) / 2) + ((newMaxY - oldMaxY) / 2)));
+            }
 
             _game.ShowInSpaceScreen();
         }
@@ -283,17 +313,9 @@ namespace HorizonVenture.HorizonVenture.Screens
             //   UpdateShip(gameTime);
 
             UpdateScrollDelay(gameTime);
-
-            UpdateLeftMouseButtonPressTime(gameTime);
         }
 
-        private void UpdateLeftMouseButtonPressTime(GameTime gameTime)
-        {
-            if (InputManager.MouseState.LeftButton == ButtonState.Pressed)
-            {
-                _leftMousePressReleaseTime += gameTime.ElapsedGameTime.Milliseconds;
-            }
-        }
+
 
         private void UpdateScrollDelay(GameTime gameTime)
         {

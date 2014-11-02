@@ -138,6 +138,12 @@ namespace HorizonVenture.HorizonVenture.EntityComponents
             }
         }
 
+        public void UpdatePositionOnShipByCenterChange(float changeX, float changeY)
+        {
+           // float realChangeX
+            PositionOnEntity = new Vector2(PositionOnEntity.X - changeX, PositionOnEntity.Y - changeY);
+        }
+
         private Vector2 _realSpacePosition = new Vector2();
 
         public Vector2 GetRealZeroAngleSpacePosition()

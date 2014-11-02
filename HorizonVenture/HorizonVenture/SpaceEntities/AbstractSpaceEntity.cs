@@ -171,7 +171,7 @@ namespace HorizonVenture.HorizonVenture.Space.SpaceEntities
 
       //  private static readonly float VECTOR_SPEED_DOWN = 100;
         private static readonly float ACCELERATION_DOWN = 1;
-        private static readonly float RESET_VECTOR_SPEED = 10f;
+        private static readonly float RESET_VECTOR_SPEED = 0.05f;
 
         private Vector2 _speedNormalized = new Vector2();
         protected void UpdateVectorSpeedDown(GameTime gameTime)
@@ -186,7 +186,7 @@ namespace HorizonVenture.HorizonVenture.Space.SpaceEntities
             float acc = Helper.GetVectorSpeed(enginesPower, weigth);
 
 
-            if (_acceleration.Length() == 0 && _speed.Length() <= RESET_VECTOR_SPEED)
+            if (_acceleration.Length() == 0 && _speed.Length() <= RESET_VECTOR_SPEED * enginesPower)
             {
                 _speed.X = 0;
                 _speed.Y = 0;
@@ -200,9 +200,7 @@ namespace HorizonVenture.HorizonVenture.Space.SpaceEntities
             {
                 _speedNormalized = _speed;
 
-                _speedNormalized.Normalize();
-
-                
+                _speedNormalized.Normalize();                
 
                 _acceleration.X -= (_speedNormalized.X * (float)Math.Pow(_speed.Length() / 20, 2));
                 _acceleration.Y -= (_speedNormalized.Y * (float)Math.Pow(_speed.Length() / 20, 2));

@@ -13,7 +13,7 @@ namespace HorizonVenture.HorizonVenture.Controls
         protected HorizonVentureGame _game;
         private int ComponentsPanelIndex { get; set; }
 
-        private static readonly int DEFAULT_WIDTH = 300;
+        public static readonly int DEFAULT_WIDTH = 300;
         public int SelectedComponent
         {
             get;

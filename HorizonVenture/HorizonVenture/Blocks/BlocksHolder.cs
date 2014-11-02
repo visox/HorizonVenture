@@ -16,7 +16,6 @@ namespace HorizonVenture.HorizonVenture.Blocks
 
         public static readonly int SCALE_1_BLOCK_SIZE = 16;
 
-
         public BlocksHolder(HorizonVentureGame game)
         {
             _game = game;
@@ -157,6 +156,17 @@ namespace HorizonVenture.HorizonVenture.Blocks
             
             _center.X *= SCALE_1_BLOCK_SIZE / 2;
             _center.Y *= SCALE_1_BLOCK_SIZE / 2;
+
+            return _center;
+        }
+
+        public Vector2 GetBlockCenter()
+        {
+            _center.X = _maxX - _minX + 1;
+            _center.Y = _maxY - _minY + 1;
+
+            _center.X /=  2;
+            _center.Y /=  2;
 
             return _center;
         }
