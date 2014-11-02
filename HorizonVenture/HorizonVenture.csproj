@@ -48,6 +48,7 @@
     <Compile Include="HorizonVenture\Controls\Control.cs" />
     <Compile Include="HorizonVenture\Controls\ImageButton.cs" />
     <Compile Include="HorizonVenture\Controls\Panel.cs" />
+    <Compile Include="HorizonVenture\Controls\RightShipMaterialsPanel.cs" />
     <Compile Include="HorizonVenture\Draw\ISpaceDrawable.cs" />
     <Compile Include="HorizonVenture\Effects\Effect.cs" />
     <Compile Include="HorizonVenture\Effects\ImpEffects\SimpleEngineEffect.cs" />

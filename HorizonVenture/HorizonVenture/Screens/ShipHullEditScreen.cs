@@ -1,4 +1,5 @@
 ﻿using HorizonVenture.HorizonVenture.Blocks;
+using HorizonVenture.HorizonVenture.Controls;
 using HorizonVenture.HorizonVenture.Space.SpaceEntities.Ships;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -35,6 +36,7 @@ namespace HorizonVenture.HorizonVenture.Screens
         public Vector2 _screenCenter;
         public float Scale { get; set; }
 
+        private RightShipMaterialsPanel _rightShipMaterialsPanel;
         private float _scrollDelay;
         private static readonly float SCROLL_DELAY = 100f;
 
@@ -53,7 +55,7 @@ namespace HorizonVenture.HorizonVenture.Screens
 
         protected override void Init()
         {
-            _screenCenter = new Vector2((_game.GetScreenSize().X) / 2, _game.GetScreenSize().Y / 2);
+            _screenCenter = new Vector2((_game.GetScreenSize().X - RightShipMaterialsPanel.DEFAULT_WIDTH) / 2, _game.GetScreenSize().Y / 2);
             Scale = 1;
 
             InputManager.AddKeyPressHandlers(Keys.H, hKeyPressed);
@@ -74,6 +76,8 @@ namespace HorizonVenture.HorizonVenture.Screens
             _editedShip = Helper.CloneDictionaryCloningValues(PlayerShip.BlocksHolder.GetBlocks());
             _removedBlocksShip = new List<Vector2>();
             _addedBlocksShip = new List<Vector2>();
+
+            AddRightShipMaterialsPanel();
         }
 
         private static readonly int ARROW_POSITION_CHANGE = 10;
@@ -98,10 +102,30 @@ namespace HorizonVenture.HorizonVenture.Screens
             _screenCenter.X -= ARROW_POSITION_CHANGE * Blocks.BlocksHolder.SCALE_1_BLOCK_SIZE;
         }
 
+        private void AddRightShipMaterialsPanel()
+        {
+            if (_controls.Contains(_rightShipMaterialsPanel))
+            {
+                _controls.Remove(_rightShipMaterialsPanel);
+            }
+
+            _rightShipMaterialsPanel = new RightShipMaterialsPanel(_game);
+            _controls.Add(_rightShipMaterialsPanel);
+        }
+
+
         private static readonly float MAX_DIST_TO_CENTER = 50;
 
         private void TryAddBlockByMouse()
         {
+            string blockType = _rightShipMaterialsPanel.SelectedMaterial;
+
+            if (String.IsNullOrEmpty(blockType))
+                return;
+
+            if (InputManager.MouseState.X >= _game.GetScreenSize().X - RightShipMaterialsPanel.DEFAULT_WIDTH)
+                return;
+
             Vector2 toAddPosition = GetCursorPositionOnShip(_screenCenter, Scale);
 
             if (Math.Abs(PlayerShip.BlocksHolder.GetBlockCenter().X - toAddPosition.X + (_topLeftOffset.X)) <= MAX_DIST_TO_CENTER
@@ -111,7 +135,7 @@ namespace HorizonVenture.HorizonVenture.Screens
 
                 if (block == null)
                 {
-                    AbstractBlock toAdd = new Block("metal1");
+                    AbstractBlock toAdd = new Block(blockType);
                     _editedShip[toAddPosition] = toAdd;
                     _addedBlocksShip.Add(toAddPosition);
                 }
@@ -129,6 +153,10 @@ namespace HorizonVenture.HorizonVenture.Screens
 
         private void TryRemoveBlockByMouse()
         {
+            if (InputManager.MouseState.X >= _game.GetScreenSize().X - RightShipMaterialsPanel.DEFAULT_WIDTH)
+                return;
+
+
             Vector2 toRemovePosition = GetCursorPositionOnShip(_screenCenter, Scale);
 
             AbstractBlock block = GetBlockByPosition(toRemovePosition);
@@ -207,8 +235,8 @@ namespace HorizonVenture.HorizonVenture.Screens
                 {
                     Scale /= 2f;
 
-                    _toCenter.X = ((_game.GetScreenSize().X) / 2)
-                        + ((_screenCenter.X - ((_game.GetScreenSize().X) / 2)) / 2);
+                    _toCenter.X = ((_game.GetScreenSize().X - RightShipMaterialsPanel.DEFAULT_WIDTH) / 2)
+                        + ((_screenCenter.X - ((_game.GetScreenSize().X - RightShipMaterialsPanel.DEFAULT_WIDTH) / 2)) / 2);
                     _toCenter.Y = (_game.GetScreenSize().Y / 2)
                         + ((_screenCenter.Y - (_game.GetScreenSize().Y / 2)) / 2);
 
@@ -230,9 +258,9 @@ namespace HorizonVenture.HorizonVenture.Screens
                         _screenCenter.X = 0;
                     }
                     if ((-((PlayerShip.BlocksHolder.GetWidth() * (BlocksHolder.SCALE_1_BLOCK_SIZE * Scale)) / 2) + _screenCenter.X) >
-                        _game.GetScreenSize().X)
+                        _game.GetScreenSize().X - RightShipMaterialsPanel.DEFAULT_WIDTH)
                     {
-                        _screenCenter.X = _game.GetScreenSize().X;
+                        _screenCenter.X = _game.GetScreenSize().X - RightShipMaterialsPanel.DEFAULT_WIDTH;
                     }
                     //////
                     if ((((PlayerShip.BlocksHolder.GetHeight() * (BlocksHolder.SCALE_1_BLOCK_SIZE * Scale)) / 2) + _screenCenter.Y) < 0)
@@ -341,8 +369,6 @@ namespace HorizonVenture.HorizonVenture.Screens
 
         public override void Draw(SpriteBatch spriteBatch)
         {
-
-
             DrawBackgroundColor();
 
             DrawShip(spriteBatch);
@@ -383,12 +409,6 @@ namespace HorizonVenture.HorizonVenture.Screens
                 (int)(_screenCenter.Y + ((MAX_DIST_TO_CENTER + RECTANGLE_THICKNESS) * Blocks.BlocksHolder.SCALE_1_BLOCK_SIZE * Scale)),
                 (int)(2 * ((MAX_DIST_TO_CENTER + RECTANGLE_THICKNESS) * Blocks.BlocksHolder.SCALE_1_BLOCK_SIZE * Scale)),
                                             RECTANGLE_THICKNESS), RECTANGLE_COLOR);
-
-            /*  spriteBatch.GraphicsDevice.rect(
-                  new Rectangle(_screenCenter.X - (MAX_DIST_TO_CENTER * Blocks.BlocksHolder.SCALE_1_BLOCK_SIZE * Scale),
-                     _screenCenter.Y - (MAX_DIST_TO_CENTER * Blocks.BlocksHolder.SCALE_1_BLOCK_SIZE * Scale),
-                     2*(MAX_DIST_TO_CENTER * Blocks.BlocksHolder.SCALE_1_BLOCK_SIZE * Scale),
-                     2*(MAX_DIST_TO_CENTER * Blocks.BlocksHolder.SCALE_1_BLOCK_SIZE * Scale)), )*/
         }
 
         Vector2 _topLeftOffset = new Vector2();

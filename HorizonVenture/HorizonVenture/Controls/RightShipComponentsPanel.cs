@@ -9,7 +9,6 @@ namespace HorizonVenture.HorizonVenture.Controls
 {
     public class RightShipComponentsPanel : Panel
     {
-        protected SpriteFont _spriteFontButtons;
         protected HorizonVentureGame _game;
         private int ComponentsPanelIndex { get; set; }
 
@@ -30,7 +29,6 @@ namespace HorizonVenture.HorizonVenture.Controls
         {
             _game = game;
             _background = _game.GetContent().Load<Texture2D>(@"Controls\Buttons\background0");
-            _spriteFontButtons = _game.GetContent().Load<SpriteFont>(@"Controls\Buttons\Fonts\Button");
 
             Position = new Rectangle((int)(_game.GetScreenSize().X - DEFAULT_WIDTH), 0, DEFAULT_WIDTH, (int)(_game.GetScreenSize().Y));
 

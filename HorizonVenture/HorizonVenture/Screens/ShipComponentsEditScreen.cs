@@ -30,8 +30,7 @@ namespace HorizonVenture.HorizonVenture.Screens
             : base(game)
         {
             _backgroundColor = Color.Black;
-            _screenCenter = new Vector2((game.GetScreenSize().X - RightShipComponentsPanel.DEFAULT_WIDTH) / 2, game.GetScreenSize().Y / 2);
-            Scale = 1;
+            
             _scrollDelay = 0;
         }
 
@@ -56,10 +55,13 @@ namespace HorizonVenture.HorizonVenture.Screens
             InputManager.OnMouseLeftKeyRelease += _mouseLeftKeyReleased;
             InputManager.OnMousePositionChanged += mousePositionChanged;
 
+            _screenCenter = new Vector2((_game.GetScreenSize().X - RightShipComponentsPanel.DEFAULT_WIDTH) / 2, _game.GetScreenSize().Y / 2);
+            Scale = 1;
+
             if (_controls.Count != 0)
                 return;
 
-            Texture2D background = _game.GetContent().Load<Texture2D>(@"Controls\Buttons\background1");
+          /*  Texture2D background = _game.GetContent().Load<Texture2D>(@"Controls\Buttons\background1");
             SpriteFont spriteFont = _game.GetContent().Load<SpriteFont>(@"Controls\Buttons\Fonts\Button");
             Vector2 screenSize = _game.GetScreenSize();
 
@@ -77,7 +79,7 @@ namespace HorizonVenture.HorizonVenture.Screens
             minusButton.DrawBackgroundColor = Color.Aqua;
             minusButton.Click += minusButton_Click;
 
-            _controls.Add(minusButton);
+            _controls.Add(minusButton);*/
 
 
 
@@ -229,9 +231,6 @@ namespace HorizonVenture.HorizonVenture.Screens
             _rightShipComponentsPanel = new RightShipComponentsPanel(_game);
             _rightShipComponentsPanel.Click += addComponentButton_Click;
             _controls.Add(_rightShipComponentsPanel);
-
-
-         //   AddComponentsToRightPanel();
         }
 
         private void addComponentButton_Click(object sender, RightShipComponentsPanel.ComponentClickArgs e)
@@ -306,7 +305,7 @@ namespace HorizonVenture.HorizonVenture.Screens
             _game.ShowInSpaceScreen();
         }
 
-        void plusButton_Click(object sender, Button.ButtonclickArgs e)
+      /*  void plusButton_Click(object sender, Button.ButtonclickArgs e)
         {
 
 
@@ -320,7 +319,7 @@ namespace HorizonVenture.HorizonVenture.Screens
             if (Scale > 1.0f/8.0f)
                 Scale /= 2f;
         }
-
+        */
 
         protected override void DrawCursorTexture(SpriteBatch spriteBatch)
         {

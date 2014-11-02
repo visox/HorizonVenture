@@ -16,6 +16,7 @@ namespace HorizonVenture.HorizonVenture.Space.SpaceEntities.Ships
     {
 
         public List<AbstractEntityComponent> OwnedComponents { get; private set; }
+        public Dictionary<string, int> OwnedMaterial { get; private set; }
 
         public DrawHandler OnPreDrawEditorSpaceEntity;
         public DrawHandler OnPostDrawEditorSpaceEntity;
@@ -37,6 +38,10 @@ namespace HorizonVenture.HorizonVenture.Space.SpaceEntities.Ships
             OwnedComponents.Add(new SimpleEngine(this));
             OwnedComponents.Add(new SimpleEngine(this));
             OwnedComponents.Add(new SimpleEngine(this));
+
+            OwnedMaterial = new Dictionary<string, int>();
+            OwnedMaterial.Add("metal1", 10);
+            OwnedMaterial.Add("metal2", 10);
 
             Behavior = new PlayerShipBehavior(this);
         }
