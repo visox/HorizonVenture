@@ -38,17 +38,24 @@ namespace HorizonVenture.HorizonVenture.Screens
         private float _scrollDelay;
         private static readonly float SCROLL_DELAY = 100f;
 
+        private Texture2D pixel;
+
         public ShipHullEditScreen(HorizonVentureGame game)
             : base(game)
         {
             _backgroundColor = Color.Black;
-            _screenCenter = new Vector2((game.GetScreenSize().X) / 2, game.GetScreenSize().Y / 2);
-            Scale = 1;
+
             _scrollDelay = 0;
+
+            pixel = new Texture2D(_game.GraphicsDevice, 1, 1, false, SurfaceFormat.Color);
+            pixel.SetData(new[] { Color.White });
         }
 
         protected override void Init()
         {
+            _screenCenter = new Vector2((_game.GetScreenSize().X) / 2, _game.GetScreenSize().Y / 2);
+            Scale = 1;
+
             InputManager.AddKeyPressHandlers(Keys.H, hKeyPressed);
 
             InputManager.AddKeyPressHandlers(Keys.Up, UpKeyPressed);
@@ -91,12 +98,14 @@ namespace HorizonVenture.HorizonVenture.Screens
             _screenCenter.X -= ARROW_POSITION_CHANGE * Blocks.BlocksHolder.SCALE_1_BLOCK_SIZE;
         }
 
+        private static readonly float MAX_DIST_TO_CENTER = 50;
+
         private void TryAddBlockByMouse()
         {
             Vector2 toAddPosition = GetCursorPositionOnShip(_screenCenter, Scale);
 
-            if (Math.Abs(PlayerShip.BlocksHolder.GetBlockCenter().X - toAddPosition.X) <= 50
-                && Math.Abs(PlayerShip.BlocksHolder.GetBlockCenter().Y - toAddPosition.Y) <= 50)
+            if (Math.Abs(PlayerShip.BlocksHolder.GetBlockCenter().X - toAddPosition.X + (_topLeftOffset.X)) <= MAX_DIST_TO_CENTER
+                && Math.Abs(PlayerShip.BlocksHolder.GetBlockCenter().Y - toAddPosition.Y + (_topLeftOffset.Y)) <= MAX_DIST_TO_CENTER)
             {
                 AbstractBlock block = GetBlockByPosition(toAddPosition);
 
@@ -162,9 +171,11 @@ namespace HorizonVenture.HorizonVenture.Screens
         protected override Vector2 GetCursorPositionOnShip(Vector2 offset, float scale)
         {
             _cursorPositionOnShip.X = InputManager.MouseState.X - offset.X +
-                (((PlayerShip.BlocksHolder.GetWidth() / 2) - _topLeftOffset.X) * Blocks.BlocksHolder.SCALE_1_BLOCK_SIZE * scale)/* + (Blocks.BlocksHolder.SCALE_1_BLOCK_SIZE / 2)*/;
+                (((PlayerShip.BlocksHolder.GetWidth() / 2) + (_topLeftOffset.X)) *
+                Blocks.BlocksHolder.SCALE_1_BLOCK_SIZE * scale);
             _cursorPositionOnShip.Y = InputManager.MouseState.Y - offset.Y +
-                (((PlayerShip.BlocksHolder.GetHeight() / 2) - _topLeftOffset.Y) * Blocks.BlocksHolder.SCALE_1_BLOCK_SIZE * scale)/* + (Blocks.BlocksHolder.SCALE_1_BLOCK_SIZE / 2)*/;
+                (((PlayerShip.BlocksHolder.GetHeight() / 2) + (_topLeftOffset.Y)) *
+                Blocks.BlocksHolder.SCALE_1_BLOCK_SIZE * scale);
 
             _cursorPositionOnShip.X /= Blocks.BlocksHolder.SCALE_1_BLOCK_SIZE * scale;
             _cursorPositionOnShip.Y /= Blocks.BlocksHolder.SCALE_1_BLOCK_SIZE * scale;
@@ -339,6 +350,45 @@ namespace HorizonVenture.HorizonVenture.Screens
             DrawControls(spriteBatch);
 
             DrawCursor(spriteBatch);
+
+            DrawBuildRectangle(spriteBatch);
+        }
+
+        private static int RECTANGLE_THICKNESS = 1;
+        private static Color RECTANGLE_COLOR = Color.White;
+
+        private void DrawBuildRectangle(SpriteBatch spriteBatch)
+        {
+            // Draw top line
+            spriteBatch.Draw(pixel, new Rectangle((int)(_screenCenter.X  -
+                ((MAX_DIST_TO_CENTER + RECTANGLE_THICKNESS) * Blocks.BlocksHolder.SCALE_1_BLOCK_SIZE * Scale)),
+                (int)(_screenCenter.Y - ((MAX_DIST_TO_CENTER + RECTANGLE_THICKNESS) * Blocks.BlocksHolder.SCALE_1_BLOCK_SIZE * Scale)),
+                (int)(2 * ((MAX_DIST_TO_CENTER + RECTANGLE_THICKNESS) * Blocks.BlocksHolder.SCALE_1_BLOCK_SIZE * Scale)), RECTANGLE_THICKNESS), RECTANGLE_COLOR);
+
+            // Draw left line
+            spriteBatch.Draw(pixel, new Rectangle((int)(_screenCenter.X -
+                ((MAX_DIST_TO_CENTER + RECTANGLE_THICKNESS) * Blocks.BlocksHolder.SCALE_1_BLOCK_SIZE * Scale)),
+                (int)(_screenCenter.Y - ((MAX_DIST_TO_CENTER + RECTANGLE_THICKNESS) * Blocks.BlocksHolder.SCALE_1_BLOCK_SIZE * Scale)),
+                RECTANGLE_THICKNESS, (int)(2 * ((MAX_DIST_TO_CENTER + RECTANGLE_THICKNESS) * Blocks.BlocksHolder.SCALE_1_BLOCK_SIZE * Scale))), RECTANGLE_COLOR);
+
+            // Draw right line
+            spriteBatch.Draw(pixel, new Rectangle((int)(_screenCenter.X +
+                ((MAX_DIST_TO_CENTER + RECTANGLE_THICKNESS) * Blocks.BlocksHolder.SCALE_1_BLOCK_SIZE * Scale)),
+                (int)(_screenCenter.Y - ((MAX_DIST_TO_CENTER + RECTANGLE_THICKNESS) * Blocks.BlocksHolder.SCALE_1_BLOCK_SIZE * Scale)),
+                RECTANGLE_THICKNESS,
+                (int)(2 * ((MAX_DIST_TO_CENTER + RECTANGLE_THICKNESS) * Blocks.BlocksHolder.SCALE_1_BLOCK_SIZE * Scale))), RECTANGLE_COLOR);
+            // Draw bottom line
+            spriteBatch.Draw(pixel, new Rectangle((int)(_screenCenter.X -
+                ((MAX_DIST_TO_CENTER + RECTANGLE_THICKNESS) * Blocks.BlocksHolder.SCALE_1_BLOCK_SIZE * Scale)),
+                (int)(_screenCenter.Y + ((MAX_DIST_TO_CENTER + RECTANGLE_THICKNESS) * Blocks.BlocksHolder.SCALE_1_BLOCK_SIZE * Scale)),
+                (int)(2 * ((MAX_DIST_TO_CENTER + RECTANGLE_THICKNESS) * Blocks.BlocksHolder.SCALE_1_BLOCK_SIZE * Scale)),
+                                            RECTANGLE_THICKNESS), RECTANGLE_COLOR);
+
+            /*  spriteBatch.GraphicsDevice.rect(
+                  new Rectangle(_screenCenter.X - (MAX_DIST_TO_CENTER * Blocks.BlocksHolder.SCALE_1_BLOCK_SIZE * Scale),
+                     _screenCenter.Y - (MAX_DIST_TO_CENTER * Blocks.BlocksHolder.SCALE_1_BLOCK_SIZE * Scale),
+                     2*(MAX_DIST_TO_CENTER * Blocks.BlocksHolder.SCALE_1_BLOCK_SIZE * Scale),
+                     2*(MAX_DIST_TO_CENTER * Blocks.BlocksHolder.SCALE_1_BLOCK_SIZE * Scale)), )*/
         }
 
         Vector2 _topLeftOffset = new Vector2();
