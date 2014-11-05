@@ -44,6 +44,7 @@
     <Compile Include="HorizonVenture\Blocks\BlocksHolderPatterns\BitmapBlocksHolderPatternSupplier.cs" />
     <Compile Include="HorizonVenture\Blocks\BlocksHolderPatterns\BlocksHolderPatternSupplier.cs" />
     <Compile Include="HorizonVenture\Controls\Button.cs" />
+    <Compile Include="HorizonVenture\Controls\RadioButtons.cs" />
     <Compile Include="HorizonVenture\Controls\RightShipComponentsPanel.cs" />
     <Compile Include="HorizonVenture\Controls\Control.cs" />
     <Compile Include="HorizonVenture\Controls\ImageButton.cs" />
@@ -136,6 +137,14 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="HorizonVenture\SpaceEntities\Ships\AIShips\Missiles\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Content\Controls\Buttons\Square.xnb">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Controls\Buttons\SquareRotated.xnb">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

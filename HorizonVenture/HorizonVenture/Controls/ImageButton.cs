@@ -7,10 +7,10 @@ using System.Text;
 
 namespace HorizonVenture.HorizonVenture.Controls
 {
-    class ImageButton : Button
+    public class ImageButton : Button
     {
         public Texture2D Image  {get; set;}
-        public Color DrawImageColor { get; set; }
+    //    public Color DrawImageColor { get; set; }
         public float Scale { get; set; }
         public float Angle { get; set; }
 
@@ -18,7 +18,7 @@ namespace HorizonVenture.HorizonVenture.Controls
             :base (background, "", null, position)
         {
             Image = image;
-            DrawImageColor = Color.White;
+            DrawForegroundColor = Color.White;
             Scale = 1;
             Angle = 0;
         }
@@ -47,7 +47,7 @@ namespace HorizonVenture.HorizonVenture.Controls
             _imageOrigin.Y = (Image.Height) / 2.0f;
 
        
-            spriteBatch.Draw(Image, _imagePosition, null, DrawImageColor, Angle, _imageOrigin,
+            spriteBatch.Draw(Image, _imagePosition, null, DrawForegroundColor, Angle, _imageOrigin,
                Scale, SpriteEffects.None, 0);
         }
     }

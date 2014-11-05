@@ -7,14 +7,14 @@ using System.Text;
 
 namespace HorizonVenture.HorizonVenture.Controls
 {
-    class Button : Control
+    public class Button : Control
     {
         protected Texture2D _background;
         protected string _text;
         protected SpriteFont _font;
 
         public Color DrawBackgroundColor { get; set; }
-        public Color DrawFontColor { get; set; }
+        public Color DrawForegroundColor { get; set; }
         public float RefreshPressMilliseconds { get; set; }
         public String Tag { get; set; }
         private float _currentDelay;
@@ -38,7 +38,7 @@ namespace HorizonVenture.HorizonVenture.Controls
             Position = position;
 
             DrawBackgroundColor = Color.White;
-            DrawFontColor = Color.Black;
+            DrawForegroundColor = Color.Black;
 
             RefreshPressMilliseconds = DEFAULT_REFRESH_PRESS_TIME;
             _currentDelay = 0;
@@ -59,7 +59,7 @@ namespace HorizonVenture.HorizonVenture.Controls
         {
             spriteBatch.Draw(_background, Position, DrawBackgroundColor);
 
-            spriteBatch.DrawString(_font, _text, _textPos, DrawFontColor, 0, 
+            spriteBatch.DrawString(_font, _text, _textPos, DrawForegroundColor, 0, 
                 _textCenter , 1, SpriteEffects.None, 0);
         }
 
