@@ -5,9 +5,11 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace HorizonVenture.HorizonVenture.Screens
 {
@@ -24,15 +26,15 @@ namespace HorizonVenture.HorizonVenture.Screens
                     _playerShip = value;
                     _editedShip = new Dictionary<Vector2, AbstractBlock>();
                     _editedShip = Helper.CloneDictionaryCloningValues(PlayerShip.BlocksHolder.GetBlocks());
-                    _removedBlocksShip = new List<Vector2>();
-                    _addedBlocksShip = new List<Vector2>();
+                    _removedBlocksShip = new ConcurrentDictionary<Vector2, bool>();
+                    _addedBlocksShip = new ConcurrentDictionary<Vector2, bool>();
                 }
             }
         }
 
         private Dictionary<Vector2, AbstractBlock> _editedShip;
-        private List<Vector2> _removedBlocksShip;
-        private List<Vector2> _addedBlocksShip;
+        private ConcurrentDictionary<Vector2, bool> _removedBlocksShip;
+        private ConcurrentDictionary<Vector2, bool> _addedBlocksShip;
         public Vector2 _screenCenter;
         public float Scale { get; set; }
 
@@ -74,8 +76,8 @@ namespace HorizonVenture.HorizonVenture.Screens
 
             _editedShip = new Dictionary<Vector2, AbstractBlock>();
             _editedShip = Helper.CloneDictionaryCloningValues(PlayerShip.BlocksHolder.GetBlocks());
-            _removedBlocksShip = new List<Vector2>();
-            _addedBlocksShip = new List<Vector2>();
+            _removedBlocksShip = new ConcurrentDictionary<Vector2, bool>();
+            _addedBlocksShip = new ConcurrentDictionary<Vector2, bool>();
 
             AddRightShipMaterialsPanel();
         }
@@ -128,28 +130,70 @@ namespace HorizonVenture.HorizonVenture.Screens
 
             Vector2 toAddPosition = GetCursorPositionOnShip(_screenCenter, Scale);
 
-            if (Math.Abs(PlayerShip.BlocksHolder.GetBlockCenter().X - toAddPosition.X + (_topLeftOffset.X)) <= MAX_DIST_TO_CENTER
-                && Math.Abs(PlayerShip.BlocksHolder.GetBlockCenter().Y - toAddPosition.Y + (_topLeftOffset.Y)) <= MAX_DIST_TO_CENTER)
-            {
-                AbstractBlock block = GetBlockByPosition(toAddPosition);
+            List<Vector2> positionsToAdd = GetPositionsByPattern(toAddPosition);
 
-                if (block == null)
-                {
-                    AbstractBlock toAdd = new Block(blockType);
-                    _editedShip[toAddPosition] = toAdd;
-                    _addedBlocksShip.Add(toAddPosition);
-                }
-                else if (_removedBlocksShip.Contains(toAddPosition))
-                {
-                    AbstractBlock blockShip = PlayerShip.BlocksHolder.GetBlockByPosition(toAddPosition);
+            positionsToAdd.ForEach(p => {
 
-                    if (blockShip != null)
+                if (Math.Abs(PlayerShip.BlocksHolder.GetBlockCenter().X - p.X + (_topLeftOffset.X)) <= MAX_DIST_TO_CENTER
+                    && Math.Abs(PlayerShip.BlocksHolder.GetBlockCenter().Y - p.Y + (_topLeftOffset.Y)) <= MAX_DIST_TO_CENTER)
+                {
+                    AbstractBlock block = GetBlockByPosition(p);
+
+                    if (block == null)
                     {
-                        _removedBlocksShip.Remove(toAddPosition);
+                        AbstractBlock toAdd = new Block(blockType);
+                        _editedShip[p] = toAdd;
+                        _addedBlocksShip.TryAdd(p, true);
+                    }
+                    else if (_removedBlocksShip.ContainsKey(p))
+                    {
+                        AbstractBlock blockShip = PlayerShip.BlocksHolder.GetBlockByPosition(p);
+
+                        if (blockShip != null)
+                        {
+                            bool succes;
+                            _removedBlocksShip.TryRemove(p, out succes);
+                        }
+                    }
+                }
+            });
+
+            
+        }
+
+        private List<Vector2> _positionsByPattern = new List<Vector2>();
+
+        private List<Vector2> GetPositionsByPattern(Vector2 toAddPosition)
+        {
+            _positionsByPattern.Clear();
+
+            int halfSize = ((_rightShipMaterialsPanel.SelectedPatternSize - 1) / 2);
+
+            if (_rightShipMaterialsPanel.SelectedPattern.Equals(RightShipMaterialsPanel.SQUARE_PATTERN))
+            {
+                for (int x = (int)toAddPosition.X - halfSize; x <= toAddPosition.X + halfSize; x++)
+                {
+                    for (int y = (int)toAddPosition.Y - halfSize; y <= toAddPosition.Y + halfSize; y++)
+                    {
+                        _positionsByPattern.Add(new Vector2(x, y));
                     }
                 }
             }
+            else if (_rightShipMaterialsPanel.SelectedPattern.Equals(RightShipMaterialsPanel.ROTATED_SQUARE_PATTERN))
+            {                
+                for (int x = (int)toAddPosition.X - halfSize; x <= toAddPosition.X + halfSize; x++)
+                {
+                    for (int y = (int)(toAddPosition.Y - (halfSize - Math.Abs((toAddPosition.X) - x)));
+                        y <= toAddPosition.Y + (halfSize - Math.Abs((toAddPosition.X) - x)); y++)
+                    {
+                        _positionsByPattern.Add(new Vector2(x, y));
+                    }
+                }
+            }
+
+            return _positionsByPattern;
         }
+
 
         private void TryRemoveBlockByMouse()
         {
@@ -159,29 +203,37 @@ namespace HorizonVenture.HorizonVenture.Screens
 
             Vector2 toRemovePosition = GetCursorPositionOnShip(_screenCenter, Scale);
 
-            AbstractBlock block = GetBlockByPosition(toRemovePosition);
+            List<Vector2> positionsToAdd = GetPositionsByPattern(toRemovePosition);
 
-            if (block != null)
-            {
-                if (_editedShip.ContainsKey(toRemovePosition))
+            positionsToAdd.ForEach(p => {
+                AbstractBlock block = GetBlockByPosition(p);
+
+                if (block != null)
                 {
-
-                    AbstractBlock blockShip = PlayerShip.BlocksHolder.GetBlockByPosition(toRemovePosition);
-
-                    if (!_removedBlocksShip.Contains(toRemovePosition) &&
-                        blockShip != null)
+                    if (_editedShip.ContainsKey(p))
                     {
-                        _removedBlocksShip.Add(toRemovePosition);
-                    }
 
-                    if (blockShip == null)
-                    {
-                        _addedBlocksShip.Remove(toRemovePosition);
-                        _removedBlocksShip.Remove(toRemovePosition);
-                        _editedShip.Remove(toRemovePosition);
+                        AbstractBlock blockShip = PlayerShip.BlocksHolder.GetBlockByPosition(p);
+
+                        if (!_removedBlocksShip.ContainsKey(p) &&
+                            blockShip != null)
+                        {
+                            _removedBlocksShip.TryAdd(p, true);
+                        }
+
+                        if (blockShip == null)
+                        {
+                            bool success;
+                            _addedBlocksShip.TryRemove(p, out success);
+                            _removedBlocksShip.TryRemove(p, out success);
+                            _editedShip.Remove(p);
+                        }
                     }
                 }
-            }
+            
+            });
+
+            
         }
 
         private void mousePositionChanged(object sender, InputManager.MousePositionChangedArgs e)
@@ -321,7 +373,7 @@ namespace HorizonVenture.HorizonVenture.Screens
             float oldMaxX = PlayerShip.BlocksHolder.GetMaxX();
             float oldMaxY = PlayerShip.BlocksHolder.GetMaxY();
 
-            foreach (Vector2 key in _removedBlocksShip)
+            foreach (Vector2 key in _removedBlocksShip.Keys)
             {
                 _editedShip.Remove(key);
             }
@@ -423,28 +475,33 @@ namespace HorizonVenture.HorizonVenture.Screens
                 // PlayerShip.BlocksHolder.Draw(spriteBatch, _screenCenter,
                 //    PlayerShip.BlocksHolder.GetCenter(), 0, Color.White, Scale);
 
-                foreach (Vector2 key in _editedShip.Keys)
-                {
-                    AbstractBlock ab = _editedShip[key];
+              /*  Parallel.ForEach(_editedShip.Keys, key =>{
 
-                    Color drawColor = Color.White;
+                    
+                });*/
 
-                    if (_removedBlocksShip.Contains(key))
-                    {
-                        drawColor = new Color(Color.Red, 0.1f / 255.0f);
-                    }
+                 foreach (Vector2 key in _editedShip.Keys)
+                 {
+                     AbstractBlock ab = _editedShip[key];
 
-                    if (_addedBlocksShip.Contains(key))
-                    {
-                        drawColor = new Color(Color.Green, 0.5f / 255.0f);
-                    }
+                     Color drawColor = Color.White;
+
+                     if (_removedBlocksShip.ContainsKey(key))
+                     {
+                         drawColor = new Color(Color.Red, 0.1f / 255.0f);
+                     }
+
+                     if (_addedBlocksShip.ContainsKey(key))
+                     {
+                         drawColor = new Color(Color.Green, 0.5f / 255.0f);
+                     }
 
 
-                    spriteBatch.Draw(ab.getTexture(_game), new Vector2(_screenCenter.X + ((key.X - _topLeftOffset.X) * BlocksHolder.SCALE_1_BLOCK_SIZE * Scale),
-                            _screenCenter.Y + ((key.Y - _topLeftOffset.Y) * BlocksHolder.SCALE_1_BLOCK_SIZE * Scale)), null, drawColor, 0,
-                            PlayerShip.BlocksHolder.GetCenter(),
-                        Scale, SpriteEffects.None, 0);
-                }
+                     spriteBatch.Draw(ab.getTexture(_game), new Vector2(_screenCenter.X + ((key.X - _topLeftOffset.X) * BlocksHolder.SCALE_1_BLOCK_SIZE * Scale),
+                             _screenCenter.Y + ((key.Y - _topLeftOffset.Y) * BlocksHolder.SCALE_1_BLOCK_SIZE * Scale)), null, drawColor, 0,
+                             PlayerShip.BlocksHolder.GetCenter(),
+                         Scale, SpriteEffects.None, 0);
+                 }
             }
         }
 

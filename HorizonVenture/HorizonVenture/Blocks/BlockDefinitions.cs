@@ -23,6 +23,8 @@ namespace HorizonVenture.HorizonVenture.Blocks
             _textures = new Dictionary<string, Texture2D>();
         }
 
+        private static Object _loadTextureLock = new object();
+
         public static Texture2D getTextureById(string id, HorizonVentureGame game)
         {
             if (!_texturesPath.ContainsKey(id))
@@ -34,7 +36,13 @@ namespace HorizonVenture.HorizonVenture.Blocks
 
             if (!_textures.ContainsKey(path))
             {
-                _textures.Add(path, game.GetContent().Load<Texture2D>(path));
+                lock (_loadTextureLock)
+                {
+                    if (!_textures.ContainsKey(path))
+                    {
+                        _textures.Add(path, game.GetContent().Load<Texture2D>(path));
+                    }
+                }
             }
 
             return _textures[path];

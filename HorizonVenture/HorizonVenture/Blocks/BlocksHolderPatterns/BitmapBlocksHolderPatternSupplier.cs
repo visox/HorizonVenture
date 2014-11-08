@@ -9,9 +9,17 @@ namespace HorizonVenture.HorizonVenture.Blocks.BlocksHolderPatterns
 {
     public static class BitmapBlocksHolderPatternSupplier
     {
+        private static Dictionary<string, BlocksHolder> memorized = new Dictionary<string, BlocksHolder>();
+
         public static BlocksHolder getPatterByFile(HorizonVentureGame game, string bitmapFile, 
             Dictionary<Color, string> blocksDic, string defaultBlock = "")
         {
+            if (memorized.ContainsKey(bitmapFile))
+            {
+                return memorized[bitmapFile].Clone(game);
+            }
+
+
             BlocksHolder result = new BlocksHolder(game);
 
             Texture2D bitmap = game.GetContent().Load<Texture2D>(bitmapFile);
@@ -46,6 +54,7 @@ namespace HorizonVenture.HorizonVenture.Blocks.BlocksHolderPatterns
 
             result.addBlocks(blocks);
 
+            memorized.Add(bitmapFile, result.Clone(game));
             return result;
         }
 

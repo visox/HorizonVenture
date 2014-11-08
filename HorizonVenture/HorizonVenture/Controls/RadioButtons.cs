@@ -10,7 +10,31 @@ namespace HorizonVenture.HorizonVenture.Controls
     public class RadioButtons : Control
     {
         private List<Button> _buttons;
-        public String SelectedButtonTag { get; private set; }
+
+        private String _selectedButtonTag;
+
+        public String SelectedButtonTag 
+        { 
+            get{ return _selectedButtonTag;}
+
+            set 
+            {
+                if (_selectedButtonTag.Equals(value))
+                    return;
+
+                foreach (Button b in _buttons)
+                {
+                    if(b.Tag.Equals(value))
+                    {
+                        _selectedButtonTag = value;
+                        return;
+                    }
+                }
+
+                if(_buttons.Count > 0)
+                    throw new ArgumentException("Tag not found");
+            }
+        }
         private Texture2D _background;
 
         public delegate void SelectedButtonChangedHandler(object sender, SelectedButtonChangedArgs e);
@@ -21,9 +45,11 @@ namespace HorizonVenture.HorizonVenture.Controls
 
         public Color DrawBackgroundButtonColor { get; set; }
         public Color DrawForegroundButtonColor { get; set; }
+        public Color DrawForegroundTextButtonColor { get; set; }
 
         public Color DrawBackgroundSelectedButtonColor { get; set; }
         public Color DrawForegroundSelectedButtonColor { get; set; }
+        public Color DrawForegroundSelectedTextButtonColor { get; set; }
 
         public Vector2 Position { get; private set; }
 
@@ -43,13 +69,15 @@ namespace HorizonVenture.HorizonVenture.Controls
 
             _buttons = new List<Button>();
 
-            SelectedButtonTag = "";
+            _selectedButtonTag = "";
 
             DrawBackgroundColor = Color.White;
             DrawBackgroundButtonColor = Color.White;
             DrawForegroundButtonColor = Color.White;
+            DrawForegroundTextButtonColor = Color.Black;
             DrawBackgroundSelectedButtonColor = Color.White;
             DrawForegroundSelectedButtonColor = Color.White;
+            DrawForegroundSelectedTextButtonColor = Color.Black;
 
             ButtonSize = DEFAULT_BUTTON_SIZE;
             ButtonMargin = DEFAULT_BUTTON_MARGIN;
@@ -58,8 +86,10 @@ namespace HorizonVenture.HorizonVenture.Controls
         public void AddButton(Button toAdd)
         {
             toAdd.DrawBackgroundColor = DrawBackgroundButtonColor;
-            toAdd.DrawForegroundColor = DrawForegroundButtonColor;
-
+            if (toAdd is ImageButton)
+                toAdd.DrawForegroundColor = DrawForegroundButtonColor;
+            else
+                toAdd.DrawForegroundColor = DrawForegroundTextButtonColor;
             toAdd.Click += Button_Click;
 
 
@@ -69,11 +99,21 @@ namespace HorizonVenture.HorizonVenture.Controls
 
         void Button_Click(object sender, Button.ButtonclickArgs e)
         {
-            _buttons.ForEach(b => b.DrawBackgroundColor = DrawBackgroundButtonColor);
-            _buttons.ForEach(b => b.DrawForegroundColor = DrawForegroundButtonColor);
+            _buttons.ForEach(b => 
+                {
+                    b.DrawBackgroundColor = DrawBackgroundButtonColor;
+
+                    if (b is ImageButton)
+                        b.DrawForegroundColor = DrawForegroundButtonColor;
+                    else
+                        b.DrawForegroundColor = DrawForegroundTextButtonColor;
+                });
 
             ((Button)sender).DrawBackgroundColor = DrawBackgroundSelectedButtonColor;
-            ((Button)sender).DrawForegroundColor = DrawForegroundSelectedButtonColor;
+            if (sender is ImageButton)
+                ((Button)sender).DrawForegroundColor = DrawForegroundSelectedButtonColor;
+            else
+                ((Button)sender).DrawForegroundColor = DrawForegroundSelectedTextButtonColor;
 
             SelectedButtonTag = e.Tag;
 

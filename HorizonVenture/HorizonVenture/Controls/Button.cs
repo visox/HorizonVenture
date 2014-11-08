@@ -59,6 +59,9 @@ namespace HorizonVenture.HorizonVenture.Controls
         {
             spriteBatch.Draw(_background, Position, DrawBackgroundColor);
 
+            _textPos.X = Position.Center.ToVector2().X;
+            _textPos.Y = Position.Center.ToVector2().Y;
+
             spriteBatch.DrawString(_font, _text, _textPos, DrawForegroundColor, 0, 
                 _textCenter , 1, SpriteEffects.None, 0);
         }

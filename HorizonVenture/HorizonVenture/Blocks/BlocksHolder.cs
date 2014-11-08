@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace HorizonVenture.HorizonVenture.Blocks
 {
@@ -11,7 +12,7 @@ namespace HorizonVenture.HorizonVenture.Blocks
     {
         Dictionary<Vector2, AbstractBlock> _blocks;
         private HorizonVentureGame _game;
-        private Texture2D [] _allTextures;
+        private Texture2D[] _allTextures;
         private int _maxX, _minX, _maxY, _minY;
 
         public static readonly int SCALE_1_BLOCK_SIZE = 16;
@@ -52,8 +53,8 @@ namespace HorizonVenture.HorizonVenture.Blocks
                     _blocks.Add(v, blocksToAdd[v]);
                 }
 
-                if (v.X > _maxX)                
-                    _maxX = (int)v.X;                
+                if (v.X > _maxX)
+                    _maxX = (int)v.X;
                 if (v.X < _minX)
                     _minX = (int)v.X;
                 if (v.Y > _maxY)
@@ -78,16 +79,16 @@ namespace HorizonVenture.HorizonVenture.Blocks
                (int)(SCALE_1_BLOCK_SIZE * 1 * ((_maxY - _minY) + 1)),
                false, SurfaceFormat.Color);
 
-            
 
 
-            foreach (Vector2 v in this._blocks.Keys)
+          //  Parallel.ForEach(this._blocks.Keys, v =>
+            foreach(Vector2 v in this._blocks.Keys)
             {
                 _realBlockPosition.X = v.X - _minX;
                 _realBlockPosition.Y = v.Y - _minY;
 
                 Texture2D toDraw = _blocks[v].getTexture(_game);
-                
+
 
                 Color[] imageData = new Color[(toDraw.Width * toDraw.Height)];
                 toDraw.GetData<Color>(imageData);
@@ -97,18 +98,19 @@ namespace HorizonVenture.HorizonVenture.Blocks
                         , (int)(SCALE_1_BLOCK_SIZE * _realBlockPosition.Y)
                         , (int)(SCALE_1_BLOCK_SIZE)
                         , (int)(SCALE_1_BLOCK_SIZE)), imageData,
-                        0, imageData.Length);                    
+                        0, imageData.Length);
             }
+            //);
 
             for (int i = 1; i < _allTextures.Length; i++)
             {
-
                 Color[] imageDataAll = new Color[(_allTextures[i - 1].Width * _allTextures[i - 1].Height)];
                 _allTextures[i - 1].GetData<Color>(imageDataAll);
 
                 Color[] imageDataAllOut = new Color[imageDataAll.Length / 4];
-                for (int x = 0; x < _allTextures[i - 1].Width; x += 2)
-                {
+
+                Parallel.For(0, _allTextures[i - 1].Width / 2, xPar => {
+                    int x = xPar * 2;
                     for (int y = 0; y < _allTextures[i - 1].Height; y += 2)
                     {
                         Color[] colors = new Color[4];
@@ -130,7 +132,11 @@ namespace HorizonVenture.HorizonVenture.Blocks
 
                         imageDataAllOut[((y / 2) * (_allTextures[i - 1].Width / 2)) + (x / 2)] = outputColor;
                     }
-                }
+                });
+               /* for (int x = 0; x < _allTextures[i - 1].Width; x += 2)
+                {
+                    
+                }*/
 
                 _allTextures[i] = new Texture2D(_game.GraphicsDevice, _allTextures[i - 1].Width / 2, _allTextures[i - 1].Height / 2);
 
@@ -138,7 +144,6 @@ namespace HorizonVenture.HorizonVenture.Blocks
                             0, 0, _allTextures[i - 1].Width / 2, _allTextures[i - 1].Height / 2), imageDataAllOut,
                             0, imageDataAllOut.Length);
             }
-
         }
 
 
@@ -153,7 +158,7 @@ namespace HorizonVenture.HorizonVenture.Blocks
         {
             _center.X = _maxX - _minX + 1;
             _center.Y = _maxY - _minY + 1;
-            
+
             _center.X *= SCALE_1_BLOCK_SIZE / 2;
             _center.Y *= SCALE_1_BLOCK_SIZE / 2;
 
@@ -165,8 +170,8 @@ namespace HorizonVenture.HorizonVenture.Blocks
             _center.X = _maxX - _minX + 1;
             _center.Y = _maxY - _minY + 1;
 
-            _center.X /=  2;
-            _center.Y /=  2;
+            _center.X /= 2;
+            _center.Y /= 2;
 
             return _center;
         }
@@ -207,8 +212,8 @@ namespace HorizonVenture.HorizonVenture.Blocks
             float actualScale = scale;
             Texture2D actualTexture = _allTextures[index];
             Vector2 actualOrigin = origin;
-            
-            while (actualScale < 1 && index+1 < _allTextures.Length)
+
+            while (actualScale < 1 && index + 1 < _allTextures.Length)
             {
                 index++;
                 actualScale *= 2;
@@ -234,6 +239,23 @@ namespace HorizonVenture.HorizonVenture.Blocks
                 return null;
 
             return _blocks[key.ElementAt(0)];
+        }
+
+        public BlocksHolder Clone(HorizonVentureGame game)
+        {
+            BlocksHolder result = new BlocksHolder(game);
+
+            result._allTextures = (Texture2D[])this._allTextures.Clone();
+            result._blocks = new Dictionary<Vector2, AbstractBlock>(this._blocks);
+            result._center = this._center;
+            result._maxX = this._maxX;
+            result._maxY = this._maxY;
+            result._minX = this._minX;
+            result._minY = this._minY;
+            result._realBlockPosition = this._realBlockPosition;
+            
+
+            return result;
         }
     }
 }
